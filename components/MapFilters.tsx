@@ -10,52 +10,26 @@ import { Txt } from "./ui";
 const CHIPS: { k: FilterKind; label: string; dot: string }[] = [
   { k: "all", label: "すべて", dot: colors.muted },
   { k: "today", label: "本日収穫", dot: colors.green },
-  { k: "owned", label: "購入済み", dot: colors.green },
-  { k: "locked", label: "未解放", dot: colors.lockedBorder },
+  { k: "delivery", label: "発送対応", dot: colors.inkSoft },
+  { k: "top", label: "評価4.5+", dot: colors.star },
 ];
 
-/** Top overlay on the map: 図鑑 header pill + filter chips (or the search field). */
-export function MapFilters({
-  ownedCount,
-  total,
-  counts,
-}: {
-  ownedCount: number;
-  total: number;
-  counts: Record<FilterKind, number>;
-}) {
+/** Top overlay on the map: header pill (→ 予約一覧) + filter chips or search. */
+export function MapFilters({ upcoming, counts }: { upcoming: number; counts: Record<FilterKind, number> }) {
   const insets = useSafeAreaInsets();
   const { filter, setFilter, query, setQuery } = useStore();
   const [searching, setSearching] = useState(false);
-  const pct = total > 0 ? Math.round((ownedCount / total) * 100) : 0;
 
   return (
-    <View
-      pointerEvents="box-none"
-      style={{ position: "absolute", top: insets.top + 6, left: 12, right: 12, gap: 8 }}
-    >
-      <Pressable
-        onPress={() => router.navigate("/collection")}
+    <View pointerEvents="box-none" style={{ position: "absolute", top: insets.top + 6, left: 12, right: 12, gap: 8 }}>
+      <View
         style={[
-          {
-            height: 48,
-            borderRadius: 24,
-            backgroundColor: colors.white,
-            flexDirection: "row",
-            alignItems: "center",
-            gap: 10,
-            paddingLeft: 18,
-            paddingRight: 8,
-          },
+          { height: 48, borderRadius: 24, backgroundColor: colors.white, flexDirection: "row", alignItems: "center", gap: 10, paddingLeft: 18, paddingRight: 8 },
           shadow.float,
         ]}
       >
-        <Txt w={700} size={15} style={{ letterSpacing: 0.3 }}>
-          はたけカード
-        </Txt>
-        <Txt mono w={500} size={10} color="#9A9A94">
-          OSAKA
-        </Txt>
+        <Txt w={700} size={15} style={{ letterSpacing: 0.3 }}>はたけマップ</Txt>
+        <Txt mono w={500} size={10} color="#9A9A94">OSAKA</Txt>
         <View style={{ flex: 1 }} />
         <Pressable
           onPress={() => {
@@ -63,51 +37,24 @@ export function MapFilters({
             if (searching) setQuery("");
           }}
           hitSlop={8}
+          accessibilityLabel="検索"
           style={{ width: 34, height: 34, alignItems: "center", justifyContent: "center" }}
         >
           <Ionicons name={searching ? "close" : "search"} size={17} color={colors.inkSoft} />
         </Pressable>
-        <View
-          style={{
-            flexDirection: "row",
-            alignItems: "center",
-            gap: 8,
-            height: 34,
-            paddingHorizontal: 12,
-            borderRadius: 17,
-            backgroundColor: "#F5F5F2",
-          }}
+        <Pressable
+          onPress={() => router.navigate("/consumer/reservations")}
+          accessibilityLabel="予約一覧"
+          style={{ flexDirection: "row", alignItems: "center", gap: 6, height: 34, paddingHorizontal: 12, borderRadius: 17, backgroundColor: "#F5F5F2" }}
         >
-          <Txt w={500} size={11} color={colors.inkSoft}>
-            図鑑
-          </Txt>
-          <View style={{ width: 40, height: 4, borderRadius: 2, backgroundColor: colors.line, overflow: "hidden" }}>
-            <View style={{ height: "100%", width: `${pct}%`, backgroundColor: colors.green }} />
-          </View>
-          <Txt mono w={500} size={12}>
-            {ownedCount}
-            <Txt mono w={500} size={12} color="#9A9A94">
-              /{total}
-            </Txt>
-          </Txt>
-        </View>
-      </Pressable>
+          <Ionicons name="calendar-outline" size={13} color={colors.inkSoft} />
+          <Txt w={500} size={11} color={colors.inkSoft}>予約</Txt>
+          <Txt mono w={500} size={12}>{String(upcoming)}</Txt>
+        </Pressable>
+      </View>
 
       {searching ? (
-        <View
-          style={[
-            {
-              height: 40,
-              borderRadius: 20,
-              backgroundColor: colors.white,
-              flexDirection: "row",
-              alignItems: "center",
-              paddingHorizontal: 14,
-              gap: 8,
-            },
-            shadow.card,
-          ]}
-        >
+        <View style={[{ height: 40, borderRadius: 20, backgroundColor: colors.white, flexDirection: "row", alignItems: "center", paddingHorizontal: 14, gap: 8 }, shadow.card]}>
           <Ionicons name="search" size={14} color={colors.muted} />
           <TextInput
             autoFocus
@@ -120,37 +67,19 @@ export function MapFilters({
           />
         </View>
       ) : (
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={{ gap: 6, paddingHorizontal: 2, paddingVertical: 2, paddingBottom: 6 }}
-        >
+        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 6, paddingHorizontal: 2, paddingVertical: 2, paddingBottom: 6 }}>
           {CHIPS.map((c) => {
             const active = filter === c.k;
             return (
               <Pressable
                 key={c.k}
                 onPress={() => setFilter(c.k)}
-                style={[
-                  {
-                    flexDirection: "row",
-                    alignItems: "center",
-                    gap: 6,
-                    paddingHorizontal: 13,
-                    paddingVertical: 7,
-                    borderRadius: 999,
-                    backgroundColor: active ? colors.ink : colors.white,
-                  },
-                  shadow.card,
-                ]}
+                accessibilityLabel={c.label}
+                style={[{ flexDirection: "row", alignItems: "center", gap: 6, paddingHorizontal: 13, paddingVertical: 7, borderRadius: 999, backgroundColor: active ? colors.ink : colors.white }, shadow.card]}
               >
                 <View style={{ width: 6, height: 6, borderRadius: 3, backgroundColor: c.dot }} />
-                <Txt w={500} size={12} color={active ? colors.white : colors.inkSoft}>
-                  {c.label}
-                </Txt>
-                <Txt mono w={500} size={10} color={active ? colors.white : colors.inkSoft} style={{ opacity: 0.6 }}>
-                  {String(counts[c.k])}
-                </Txt>
+                <Txt w={500} size={12} color={active ? colors.white : colors.inkSoft}>{c.label}</Txt>
+                <Txt mono w={500} size={10} color={active ? colors.white : colors.inkSoft} style={{ opacity: 0.6 }}>{String(counts[c.k])}</Txt>
               </Pressable>
             );
           })}

@@ -43,3 +43,6 @@ yarn-error.*
 # convex
 .env.local
 e2e/shots/
+
+# convex local deployment data
+.convex/

@@ -6,17 +6,26 @@ import { cartCount, useStore } from "../lib/store";
 import { colors } from "../lib/theme";
 import { Txt } from "./ui";
 
-type Tab = "map" | "collection" | "cart";
+type IconName = "map" | "calendar" | "bag" | "home" | "leaf" | "person" | "star";
+type Tab = { key: string; label: string; icon: IconName; href: string; badge?: boolean };
 
-const TABS: { key: Tab; label: string; icon: "map" | "albums" | "bag"; href: "/" | "/collection" | "/cart" }[] = [
-  { key: "map", label: "地図", icon: "map", href: "/" },
-  { key: "collection", label: "図鑑", icon: "albums", href: "/collection" },
-  { key: "cart", label: "カート", icon: "bag", href: "/cart" },
+export const CONSUMER_TABS: Tab[] = [
+  { key: "map", label: "地図", icon: "map", href: "/consumer/map" },
+  { key: "reservations", label: "予約", icon: "calendar", href: "/consumer/reservations" },
+  { key: "cart", label: "カゴ", icon: "bag", href: "/consumer/cart", badge: true },
+];
+
+export const FARMER_TABS: Tab[] = [
+  { key: "home", label: "ホーム", icon: "home", href: "/farmer/home" },
+  { key: "reservations", label: "予約", icon: "calendar", href: "/farmer/reservations" },
+  { key: "products", label: "商品", icon: "leaf", href: "/farmer/products" },
+  { key: "reviews", label: "レビュー", icon: "star", href: "/farmer/reviews" },
+  { key: "profile", label: "プロフィール", icon: "person", href: "/farmer/profile" },
 ];
 
 export const TAB_BAR_HEIGHT = 84;
 
-export function TabBar({ active }: { active: Tab }) {
+export function TabBar({ active, tabs = CONSUMER_TABS }: { active: string; tabs?: Tab[] }) {
   const insets = useSafeAreaInsets();
   const count = useStore((s) => cartCount(s.cart));
   return (
@@ -35,14 +44,14 @@ export function TabBar({ active }: { active: Tab }) {
         paddingHorizontal: 20,
       }}
     >
-      {TABS.map((t) => {
+      {tabs.map((t) => {
         const on = t.key === active;
         const color = on ? colors.ink : colors.muted;
         return (
           <Pressable
             key={t.key}
             onPress={() => {
-              if (!on) router.navigate(t.href);
+              if (!on) router.navigate(t.href as never);
             }}
             accessibilityRole="tab"
             accessibilityLabel={t.label}
@@ -51,7 +60,7 @@ export function TabBar({ active }: { active: Tab }) {
           >
             <View>
               <Ionicons name={on ? t.icon : (`${t.icon}-outline` as const)} size={24} color={color} />
-              {t.key === "cart" && count > 0 && (
+              {t.badge && count > 0 && (
                 <View
                   style={{
                     position: "absolute",

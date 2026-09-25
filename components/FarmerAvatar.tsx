@@ -2,27 +2,23 @@ import { Image } from "expo-image";
 import { View } from "react-native";
 import { colors } from "../lib/theme";
 
-/**
- * Face avatar. Locked farmers stay tappable but read as "not yet collected":
- * blurred, desaturated veil, dashed grey ring. Owned: sharp photo, white ring on tint.
- */
+/** Round face photo with a white ring on the farmer's tint; green ring when selected, gold-ish when PR. */
 export function FarmerAvatar({
   uri,
   size,
-  owned,
   tint,
   selected = false,
-  borderWidth,
+  pr = false,
+  borderWidth = 3,
 }: {
   uri: string;
   size: number;
-  owned: boolean;
   tint: string;
   selected?: boolean;
+  pr?: boolean;
   borderWidth?: number;
 }) {
-  const border = borderWidth ?? (owned ? 3 : 2);
-  const inner = size - border * 2;
+  const inner = size - borderWidth * 2;
   return (
     <View
       style={{
@@ -30,7 +26,7 @@ export function FarmerAvatar({
         height: size + 6,
         borderRadius: (size + 6) / 2,
         borderWidth: 3,
-        borderColor: selected ? colors.green : "transparent",
+        borderColor: selected ? colors.green : pr ? colors.pr : "transparent",
         alignItems: "center",
         justifyContent: "center",
       }}
@@ -40,34 +36,20 @@ export function FarmerAvatar({
           width: size,
           height: size,
           borderRadius: size / 2,
-          backgroundColor: owned ? tint : colors.lockedBg,
-          borderWidth: border,
-          borderColor: owned ? colors.white : colors.lockedBorder,
-          borderStyle: owned ? "solid" : "dashed",
+          backgroundColor: tint,
+          borderWidth,
+          borderColor: colors.white,
           alignItems: "center",
           justifyContent: "center",
           shadowColor: "#000",
-          shadowOpacity: owned ? 0.12 : 0.06,
+          shadowOpacity: 0.12,
           shadowRadius: 6,
           shadowOffset: { width: 0, height: 2 },
-          elevation: owned ? 3 : 1,
+          elevation: 3,
         }}
       >
         <View style={{ width: inner, height: inner, borderRadius: inner / 2, overflow: "hidden" }}>
-          <Image
-            source={{ uri }}
-            style={{ width: inner, height: inner }}
-            contentFit="cover"
-            transition={250}
-            blurRadius={owned ? 0 : Math.max(10, Math.round(inner / 3))}
-            cachePolicy="memory-disk"
-          />
-          {!owned && (
-            <View
-              pointerEvents="none"
-              style={{ position: "absolute", inset: 0, backgroundColor: "rgba(239,239,235,0.68)" }}
-            />
-          )}
+          <Image source={{ uri }} style={{ width: inner, height: inner }} contentFit="cover" transition={250} cachePolicy="memory-disk" />
         </View>
       </View>
     </View>

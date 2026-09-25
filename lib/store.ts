@@ -1,29 +1,28 @@
 import { create } from "zustand";
 import type { FarmerId, ProductId } from "./types";
 
-export type CartItem = { productId: ProductId; farmerId: FarmerId; quantity: number };
-export type FilterKind = "all" | "today" | "owned" | "locked";
-export type RevealItem = { farmerId: FarmerId; count: number };
+export type Role = "consumer" | "farmer" | "admin";
+export type FilterKind = "all" | "today" | "delivery" | "top";
+export type CartItem = { productId: ProductId; quantity: number };
+export type Cart = { farmerId: FarmerId; farmerName: string; items: CartItem[] } | null;
 
 type AppState = {
+  role: Role | null;
+  userId: string;
+  setIdentity: (role: Role, userId: string) => void;
+
   selectedFarmerId: FarmerId | null;
   selectFarmer: (id: FarmerId | null) => void;
-
   filter: FilterKind;
   setFilter: (f: FilterKind) => void;
   query: string;
   setQuery: (q: string) => void;
 
-  cart: CartItem[];
-  addToCart: (item: CartItem) => void;
+  /** Single-farmer cart: a reservation is always with one farmer. */
+  cart: Cart;
+  addToCart: (farmerId: FarmerId, farmerName: string, productId: ProductId, quantity: number) => "added" | "replaced";
   setQuantity: (productId: ProductId, quantity: number) => void;
   clearCart: () => void;
-
-  /** Cards to reveal after a purchase, in order. */
-  revealQueue: RevealItem[];
-  enqueueReveal: (items: RevealItem[]) => void;
-  shiftReveal: () => void;
-  clearReveal: () => void;
 
   toast: string | null;
   showToast: (msg: string) => void;
@@ -31,48 +30,49 @@ type AppState = {
 
 let toastTimer: ReturnType<typeof setTimeout> | null = null;
 
-export const useStore = create<AppState>((set) => ({
+export const useStore = create<AppState>((set, get) => ({
+  role: null,
+  userId: "",
+  setIdentity: (role, userId) => set({ role, userId, cart: null, selectedFarmerId: null }),
+
   selectedFarmerId: null,
   selectFarmer: (id) => set({ selectedFarmerId: id }),
-
   filter: "all",
   setFilter: (filter) => set({ filter }),
   query: "",
   setQuery: (query) => set({ query }),
 
-  cart: [],
-  addToCart: (item) =>
-    set((s) => {
-      const existing = s.cart.find((c) => c.productId === item.productId);
-      if (existing) {
-        return {
-          cart: s.cart.map((c) =>
-            c.productId === item.productId ? { ...c, quantity: c.quantity + item.quantity } : c,
-          ),
-        };
-      }
-      return { cart: [...s.cart, item] };
-    }),
+  cart: null,
+  addToCart: (farmerId, farmerName, productId, quantity) => {
+    const cart = get().cart;
+    if (cart && cart.farmerId === farmerId) {
+      const existing = cart.items.find((c) => c.productId === productId);
+      const items = existing
+        ? cart.items.map((c) => (c.productId === productId ? { ...c, quantity: c.quantity + quantity } : c))
+        : [...cart.items, { productId, quantity }];
+      set({ cart: { ...cart, items } });
+      return "added";
+    }
+    set({ cart: { farmerId, farmerName, items: [{ productId, quantity }] } });
+    return cart ? "replaced" : "added";
+  },
   setQuantity: (productId, quantity) =>
-    set((s) => ({
-      cart:
+    set((s) => {
+      if (!s.cart) return {};
+      const items =
         quantity <= 0
-          ? s.cart.filter((c) => c.productId !== productId)
-          : s.cart.map((c) => (c.productId === productId ? { ...c, quantity } : c)),
-    })),
-  clearCart: () => set({ cart: [] }),
-
-  revealQueue: [],
-  enqueueReveal: (items) => set((s) => ({ revealQueue: [...s.revealQueue, ...items] })),
-  shiftReveal: () => set((s) => ({ revealQueue: s.revealQueue.slice(1) })),
-  clearReveal: () => set({ revealQueue: [] }),
+          ? s.cart.items.filter((c) => c.productId !== productId)
+          : s.cart.items.map((c) => (c.productId === productId ? { ...c, quantity } : c));
+      return { cart: items.length ? { ...s.cart, items } : null };
+    }),
+  clearCart: () => set({ cart: null }),
 
   toast: null,
   showToast: (msg) => {
     if (toastTimer) clearTimeout(toastTimer);
     set({ toast: msg });
-    toastTimer = setTimeout(() => set({ toast: null }), 1600);
+    toastTimer = setTimeout(() => set({ toast: null }), 1800);
   },
 }));
 
-export const cartCount = (cart: CartItem[]) => cart.reduce((a, c) => a + c.quantity, 0);
+export const cartCount = (cart: Cart) => cart?.items.reduce((a, c) => a + c.quantity, 0) ?? 0;

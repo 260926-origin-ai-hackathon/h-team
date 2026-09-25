@@ -32,6 +32,12 @@ export const colors = {
   amberText: "#7A5A22",
   fewBg: "#F9EBE3",
   fewText: "#9A4A2C",
+
+  star: "#E4A53A",
+  beigeAvatar: "#EDE7DA",
+  pr: "#D9B25C",
+  prBg: "#FBF4E3",
+  prText: "#7C5A12",
 };
 
 export const fonts = {

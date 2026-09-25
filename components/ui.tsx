@@ -1,6 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
 import type { ComponentProps } from "react";
-import { Pressable, StyleProp, Text, TextProps, View, ViewStyle } from "react-native";
+import { Pressable, StyleProp, Text, TextInput, TextProps, View, ViewStyle } from "react-native";
 import { colors, fonts, radius, shadow } from "../lib/theme";
 
 type Weight = 400 | 500 | 700;
@@ -230,5 +230,115 @@ export function AddButton({ onPress, dark = false, size = 36 }: { onPress: () =>
 export function Card({ children, style }: { children: React.ReactNode; style?: StyleProp<ViewStyle> }) {
   return (
     <View style={[{ backgroundColor: colors.white, borderRadius: radius.xl, ...shadow.card }, style]}>{children}</View>
+  );
+}
+
+export function StatusPill({ label, bg, color }: { label: string; bg: string; color: string }) {
+  return <Pill label={label} bg={bg} color={color} size={10} weight={700} />;
+}
+
+/** Labeled text input for the farmer-side forms. */
+export function Field({
+  label,
+  value,
+  onChangeText,
+  placeholder,
+  multiline = false,
+  keyboardType,
+  hint,
+}: {
+  label: string;
+  value: string;
+  onChangeText: (t: string) => void;
+  placeholder?: string;
+  multiline?: boolean;
+  keyboardType?: "default" | "numeric" | "decimal-pad";
+  hint?: string;
+}) {
+  return (
+    <View style={{ gap: 6 }}>
+      <Txt w={500} size={11} color={colors.muted}>{label}</Txt>
+      <TextInput
+        value={value}
+        onChangeText={onChangeText}
+        placeholder={placeholder}
+        placeholderTextColor={colors.mutedLight}
+        multiline={multiline}
+        keyboardType={keyboardType}
+        accessibilityLabel={label}
+        style={{
+          backgroundColor: colors.white,
+          borderWidth: 1,
+          borderColor: colors.line,
+          borderRadius: 12,
+          paddingHorizontal: 12,
+          paddingVertical: multiline ? 10 : 0,
+          height: multiline ? 92 : 44,
+          textAlignVertical: multiline ? "top" : "center",
+          fontFamily: fonts.sans400,
+          fontSize: 14,
+          color: colors.ink,
+        }}
+      />
+      {hint && <Txt size={10.5} color={colors.muted}>{hint}</Txt>}
+    </View>
+  );
+}
+
+/** Two-way toggle row (e.g. 本日収穫 / 発送対応 / PR). */
+export function ToggleRow({ label, hint, value, onChange }: { label: string; hint?: string; value: boolean; onChange: (v: boolean) => void }) {
+  return (
+    <Pressable
+      onPress={() => onChange(!value)}
+      accessibilityRole="switch"
+      accessibilityLabel={label}
+      accessibilityState={{ checked: value }}
+      style={{ flexDirection: "row", alignItems: "center", gap: 12, paddingVertical: 10 }}
+    >
+      <View style={{ flex: 1, gap: 2 }}>
+        <Txt w={500} size={13}>{label}</Txt>
+        {hint && <Txt size={11} color={colors.muted}>{hint}</Txt>}
+      </View>
+      <View style={{ width: 44, height: 26, borderRadius: 13, backgroundColor: value ? colors.greenDeep : colors.line, padding: 3, alignItems: value ? "flex-end" : "flex-start" }}>
+        <View style={{ width: 20, height: 20, borderRadius: 10, backgroundColor: colors.white }} />
+      </View>
+    </Pressable>
+  );
+}
+
+/** Segmented control (e.g. 取りに行く / 発送代行). */
+export function Segmented<T extends string>({ options, value, onChange }: { options: { value: T; label: string; disabled?: boolean }[]; value: T; onChange: (v: T) => void }) {
+  return (
+    <View style={{ flexDirection: "row", padding: 3, backgroundColor: "#F0F0EC", borderRadius: 12 }}>
+      {options.map((o) => {
+        const on = o.value === value;
+        return (
+          <Pressable
+            key={o.value}
+            disabled={o.disabled}
+            onPress={() => onChange(o.value)}
+            accessibilityRole="button"
+            accessibilityLabel={o.label}
+            accessibilityState={{ selected: on, disabled: o.disabled }}
+            style={{ flex: 1, alignItems: "center", paddingVertical: 9, borderRadius: 9, backgroundColor: on ? colors.white : "transparent", opacity: o.disabled ? 0.4 : 1, ...(on ? shadow.card : {}) }}
+          >
+            <Txt w={700} size={12} color={on ? colors.ink : colors.muted}>{o.label}</Txt>
+          </Pressable>
+        );
+      })}
+    </View>
+  );
+}
+
+/** Screen header used by list screens: mono label + big title. */
+export function ScreenTitle({ label, title, right }: { label: string; title: string; right?: React.ReactNode }) {
+  return (
+    <View style={{ flexDirection: "row", alignItems: "flex-end", justifyContent: "space-between" }}>
+      <View style={{ gap: 4 }}>
+        <SectionLabel>{label}</SectionLabel>
+        <Txt w={700} size={24}>{title}</Txt>
+      </View>
+      {right}
+    </View>
   );
 }

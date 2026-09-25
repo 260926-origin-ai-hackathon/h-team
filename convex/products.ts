@@ -1,4 +1,4 @@
-import { query } from "./_generated/server";
+import { mutation, query } from "./_generated/server";
 import { v } from "convex/values";
 import { resolveImage } from "./images";
 import { toPublicFarmer } from "./farmers";
@@ -10,7 +10,20 @@ async function toPublicProduct(ctx: QueryCtx, p: Doc<"products">) {
   return { ...rest, image: await resolveImage(ctx, imageStorageId, imageUrl) };
 }
 
+/** Consumer-facing: available products of a farmer. */
 export const byFarmer = query({
+  args: { farmerId: v.id("farmers") },
+  handler: async (ctx, { farmerId }) => {
+    const products = await ctx.db
+      .query("products")
+      .withIndex("by_farmer", (q) => q.eq("farmerId", farmerId))
+      .collect();
+    return Promise.all(products.filter((p) => p.available).map((p) => toPublicProduct(ctx, p)));
+  },
+});
+
+/** Farmer-facing: every product incl. hidden ones. */
+export const mine = query({
   args: { farmerId: v.id("farmers") },
   handler: async (ctx, { farmerId }) => {
     const products = await ctx.db
@@ -27,10 +40,7 @@ export const get = query({
     const p = await ctx.db.get(id);
     if (!p) return null;
     const farmer = await ctx.db.get(p.farmerId);
-    return {
-      ...(await toPublicProduct(ctx, p)),
-      farmer: farmer ? await toPublicFarmer(ctx, farmer) : null,
-    };
+    return { ...(await toPublicProduct(ctx, p)), farmer: farmer ? await toPublicFarmer(ctx, farmer) : null };
   },
 });
 
@@ -42,11 +52,39 @@ export const byIds = query({
       const p = await ctx.db.get(id);
       if (!p) continue;
       const farmer = await ctx.db.get(p.farmerId);
-      out.push({
-        ...(await toPublicProduct(ctx, p)),
-        farmerName: farmer?.name ?? "",
-      });
+      out.push({ ...(await toPublicProduct(ctx, p)), farmerName: farmer?.name ?? "" });
     }
     return out;
+  },
+});
+
+const productFields = {
+  name: v.string(),
+  imageUrl: v.optional(v.string()),
+  description: v.string(),
+  price: v.number(),
+  unit: v.string(),
+  harvest: v.string(),
+  harvestedToday: v.boolean(),
+  deliveryAvailable: v.boolean(),
+  stock: v.number(),
+  available: v.boolean(),
+};
+
+export const upsert = mutation({
+  args: { id: v.optional(v.id("products")), farmerId: v.id("farmers"), ...productFields },
+  handler: async (ctx, { id, ...fields }) => {
+    if (id) {
+      await ctx.db.patch(id, fields);
+      return id;
+    }
+    return ctx.db.insert("products", fields);
+  },
+});
+
+export const remove = mutation({
+  args: { id: v.id("products") },
+  handler: async (ctx, { id }) => {
+    await ctx.db.delete(id);
   },
 });

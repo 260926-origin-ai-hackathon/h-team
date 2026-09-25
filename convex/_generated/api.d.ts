@@ -8,12 +8,13 @@
  * @module
  */
 
-import type * as collections from "../collections.js";
 import type * as farmers from "../farmers.js";
 import type * as images from "../images.js";
-import type * as orders from "../orders.js";
 import type * as products from "../products.js";
+import type * as reservations from "../reservations.js";
+import type * as reviews from "../reviews.js";
 import type * as seed from "../seed.js";
+import type * as users from "../users.js";
 
 import type {
   ApiFromModules,
@@ -22,12 +23,13 @@ import type {
 } from "convex/server";
 
 declare const fullApi: ApiFromModules<{
-  collections: typeof collections;
   farmers: typeof farmers;
   images: typeof images;
-  orders: typeof orders;
   products: typeof products;
+  reservations: typeof reservations;
+  reviews: typeof reviews;
   seed: typeof seed;
+  users: typeof users;
 }>;
 
 /**

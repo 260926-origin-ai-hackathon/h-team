@@ -11,7 +11,6 @@ Mapbox.setAccessToken(hasMapboxToken ? MAPBOX_TOKEN : "pk.offline-placeholder");
 Mapbox.setTelemetryEnabled(false);
 Mapbox.Logger.setLogLevel("warning");
 
-/** Tile-less style used when no valid token is configured (or tiles fail to load). */
 export const OFFLINE_STYLE_JSON = JSON.stringify({
   version: 8,
   name: "offline",
@@ -19,20 +18,17 @@ export const OFFLINE_STYLE_JSON = JSON.stringify({
   layers: [{ id: "bg", type: "background", paint: { "background-color": "#EFEFEC" } }],
 });
 
-/** Osaka — the demo's default viewport (matches the design: [34.66, 135.47] z10). */
+/** Osaka — the demo's default viewport. */
 export const DEFAULT_CENTER: [number, number] = [135.47, 34.66];
 export const DEFAULT_ZOOM = 9;
 export const FOCUS_ZOOM = 10.5;
 
-export const toPosition = (f: Pick<Farmer, "latitude" | "longitude">): [number, number] => [
-  f.longitude,
-  f.latitude,
-];
+export const toPosition = (f: Pick<Farmer, "latitude" | "longitude">): [number, number] => [f.longitude, f.latitude];
 
-export function matchesFilter(f: Farmer, filter: FilterKind, query: string, owned: boolean) {
-  if (filter === "owned" && !owned) return false;
-  if (filter === "locked" && owned) return false;
+export function matchesFilter(f: Farmer, filter: FilterKind, query: string) {
   if (filter === "today" && !f.hasTodayHarvest) return false;
+  if (filter === "delivery" && !f.deliveryAvailable) return false;
+  if (filter === "top" && !(f.reviewCount > 0 && f.ratingAvg >= 4.5)) return false;
   const q = query.trim();
   if (q) {
     const hay = `${f.name} ${f.kana} ${f.farmName} ${f.prefecture} ${f.city} ${f.crops.join(" ")}`;
