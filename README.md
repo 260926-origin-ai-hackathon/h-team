@@ -73,6 +73,8 @@
 
 ## 技術スタック
 
+![システム構成](docs/architecture.png)
+
 | 領域 | 使用技術 |
 | --- | --- |
 | アプリ | Expo SDK 57 / React Native 0.86 / TypeScript / Expo Router（Tabs + Stack、モーダル） |

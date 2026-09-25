@@ -1,0 +1,134 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1000" viewBox="0 0 1600 1000">
+<defs>
+<marker id="ah" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L10,5 L0,10 z" fill="#1B1B1B"/></marker>
+<marker id="ah2" markerWidth="10" markerHeight="10" refX="1" refY="5" orient="auto" markerUnits="userSpaceOnUse"><path d="M10,0 L0,5 L10,10 z" fill="#1B1B1B"/></marker>
+</defs>
+<rect x="0" y="0" width="1600" height="1000" rx="0" fill="#FAFAF8" stroke="none" stroke-width="1.5"/>
+<text x="60" y="74" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', 'Helvetica Neue', Arial, sans-serif" font-size="34" font-weight="800" fill="#1B1B1B" text-anchor="start">はたけマップ — システム構成</text>
+<text x="60" y="108" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', 'Helvetica Neue', Arial, sans-serif" font-size="16" font-weight="400" fill="#6B6B66" text-anchor="start">Expo / React Native アプリ（TypeScript）＋ Convex バックエンド ＋ Mapbox</text>
+<rect x="60" y="150" width="640" height="520" rx="18" fill="#FFFFFF" stroke="#DDDBD4" stroke-width="1.5"/>
+<rect x="60" y="150" width="640" height="46" rx="18" fill="#1B1B1B" stroke="none" stroke-width="1.5"/>
+<rect x="60" y="174" width="640" height="22" rx="0" fill="#1B1B1B" stroke="none" stroke-width="1.5"/>
+<text x="82" y="180" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', 'Helvetica Neue', Arial, sans-serif" font-size="17" font-weight="700" fill="#FFFFFF" text-anchor="start">クライアント　iOS / Android アプリ</text>
+<text x="678" y="180" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', 'Helvetica Neue', Arial, sans-serif" font-size="13" font-weight="400" fill="#CFCFC8" text-anchor="end">Expo SDK 57 · RN 0.86 · TypeScript</text>
+<rect x="84" y="216" width="186" height="92" rx="12" fill="#E6F2EA" stroke="none" stroke-width="1.5"/>
+<text x="98" y="246" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', 'Helvetica Neue', Arial, sans-serif" font-size="17" font-weight="800" fill="#2E7D4F" text-anchor="start">消費者アプリ</text>
+<text x="98" y="270" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', 'Helvetica Neue', Arial, sans-serif" font-size="11.5" font-weight="400" fill="#1B1B1B" text-anchor="start">地図で生産者を探す・予約</text>
+<text x="98" y="290" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', 'Helvetica Neue', Arial, sans-serif" font-size="11.5" font-weight="400" fill="#1B1B1B" text-anchor="start">決済・レビュー・ウォッチ</text>
+<rect x="284" y="216" width="186" height="92" rx="12" fill="#FBF1DC" stroke="none" stroke-width="1.5"/>
+<text x="298" y="246" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', 'Helvetica Neue', Arial, sans-serif" font-size="17" font-weight="800" fill="#B7791F" text-anchor="start">生産者アプリ</text>
+<text x="298" y="270" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', 'Helvetica Neue', Arial, sans-serif" font-size="11.5" font-weight="400" fill="#1B1B1B" text-anchor="start">予約の確定・発送・お客さま評価</text>
+<text x="298" y="290" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', 'Helvetica Neue', Arial, sans-serif" font-size="11.5" font-weight="400" fill="#1B1B1B" text-anchor="start">商品・プロフィール・PR</text>
+<rect x="484" y="216" width="186" height="92" rx="12" fill="#E4ECF8" stroke="none" stroke-width="1.5"/>
+<text x="498" y="246" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', 'Helvetica Neue', Arial, sans-serif" font-size="17" font-weight="800" fill="#2F5FA8" text-anchor="start">運営</text>
+<text x="498" y="270" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', 'Helvetica Neue', Arial, sans-serif" font-size="11.5" font-weight="400" fill="#1B1B1B" text-anchor="start">生産者の承認 / 却下</text>
+<text x="498" y="290" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', 'Helvetica Neue', Arial, sans-serif" font-size="11.5" font-weight="400" fill="#1B1B1B" text-anchor="start">起動画面のタイトル長押し</text>
+<text x="84" y="332" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', 'Helvetica Neue', Arial, sans-serif" font-size="12" font-weight="400" fill="#6B6B66" text-anchor="start">起動時にロールを選択（固定のデモ ID）。3 つのアプリを 1 つのコードベースで。</text>
+<text x="84" y="364" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', 'Helvetica Neue', Arial, sans-serif" font-size="12" font-weight="700" fill="#6B6B66" text-anchor="start">ナビゲーション / 状態</text>
+<rect x="84" y="376" width="301.7200000000001" height="32" rx="9" fill="#E6F2EA" stroke="none" stroke-width="1.5"/>
+<text x="234.86000000000004" y="397.04" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', 'Helvetica Neue', Arial, sans-serif" font-size="14" font-weight="600" fill="#2E7D4F" text-anchor="middle">Expo Router（Tabs + Stack + Modal）</text>
+<rect x="393.7200000000001" y="376" width="78.83999999999999" height="32" rx="9" fill="#E6F2EA" stroke="none" stroke-width="1.5"/>
+<text x="433.1400000000001" y="397.04" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', 'Helvetica Neue', Arial, sans-serif" font-size="14" font-weight="600" fill="#2E7D4F" text-anchor="middle">Zustand</text>
+<rect x="84" y="416" width="326.0800000000001" height="32" rx="9" fill="#E6F2EA" stroke="none" stroke-width="1.5"/>
+<text x="247.04000000000005" y="437.04" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', 'Helvetica Neue', Arial, sans-serif" font-size="14" font-weight="600" fill="#2E7D4F" text-anchor="middle">convex/react（useQuery / useMutation）</text>
+<text x="84" y="474" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', 'Helvetica Neue', Arial, sans-serif" font-size="12" font-weight="700" fill="#6B6B66" text-anchor="start">UI / ネイティブ</text>
+<rect x="84" y="486" width="135.68" height="32" rx="9" fill="#EFEEE9" stroke="none" stroke-width="1.5"/>
+<text x="151.84" y="507.04" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', 'Helvetica Neue', Arial, sans-serif" font-size="14" font-weight="600" fill="#1B1B1B" text-anchor="middle">@rnmapbox/maps</text>
+<rect x="227.68" y="486" width="184.40000000000003" height="32" rx="9" fill="#EFEEE9" stroke="none" stroke-width="1.5"/>
+<text x="319.88" y="507.04" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', 'Helvetica Neue', Arial, sans-serif" font-size="14" font-weight="600" fill="#1B1B1B" text-anchor="middle">@gorhom/bottom-sheet</text>
+<rect x="420.08000000000004" y="486" width="119.44000000000001" height="32" rx="9" fill="#EFEEE9" stroke="none" stroke-width="1.5"/>
+<text x="479.80000000000007" y="507.04" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', 'Helvetica Neue', Arial, sans-serif" font-size="14" font-weight="600" fill="#1B1B1B" text-anchor="middle">Reanimated 4</text>
+<rect x="547.5200000000001" y="486" width="103.2" height="32" rx="9" fill="#EFEEE9" stroke="none" stroke-width="1.5"/>
+<text x="599.1200000000001" y="507.04" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', 'Helvetica Neue', Arial, sans-serif" font-size="14" font-weight="600" fill="#1B1B1B" text-anchor="middle">expo-image</text>
+<rect x="84" y="526" width="127.56000000000002" height="32" rx="9" fill="#EFEEE9" stroke="none" stroke-width="1.5"/>
+<text x="147.78" y="547.04" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', 'Helvetica Neue', Arial, sans-serif" font-size="14" font-weight="600" fill="#1B1B1B" text-anchor="middle">expo-location</text>
+<rect x="219.56" y="526" width="119.44000000000001" height="32" rx="9" fill="#EFEEE9" stroke="none" stroke-width="1.5"/>
+<text x="279.28000000000003" y="547.04" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', 'Helvetica Neue', Arial, sans-serif" font-size="14" font-weight="600" fill="#1B1B1B" text-anchor="middle">expo-haptics</text>
+<rect x="347.0" y="526" width="95.08" height="32" rx="9" fill="#EFEEE9" stroke="none" stroke-width="1.5"/>
+<text x="394.54" y="547.04" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', 'Helvetica Neue', Arial, sans-serif" font-size="14" font-weight="600" fill="#1B1B1B" text-anchor="middle">expo-font</text>
+<rect x="84" y="566" width="249.36000000000007" height="32" rx="9" fill="#EFEEE9" stroke="none" stroke-width="1.5"/>
+<text x="208.68000000000004" y="587.04" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', 'Helvetica Neue', Arial, sans-serif" font-size="14" font-weight="600" fill="#1B1B1B" text-anchor="middle">react-native-gesture-handler</text>
+<text x="84" y="624" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', 'Helvetica Neue', Arial, sans-serif" font-size="12" font-weight="700" fill="#6B6B66" text-anchor="start">デザイン</text>
+<rect x="84" y="636" width="176.28000000000003" height="32" rx="9" fill="#EFEEE9" stroke="none" stroke-width="1.5"/>
+<text x="172.14000000000001" y="657.04" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', 'Helvetica Neue', Arial, sans-serif" font-size="14" font-weight="600" fill="#1B1B1B" text-anchor="middle">Zen Kaku Gothic New</text>
+<rect x="268.28000000000003" y="636" width="127.56000000000002" height="32" rx="9" fill="#EFEEE9" stroke="none" stroke-width="1.5"/>
+<text x="332.06000000000006" y="657.04" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', 'Helvetica Neue', Arial, sans-serif" font-size="14" font-weight="600" fill="#1B1B1B" text-anchor="middle">IBM Plex Mono</text>
+<rect x="403.84000000000003" y="636" width="239.56000000000006" height="32" rx="9" fill="#EFEEE9" stroke="none" stroke-width="1.5"/>
+<text x="523.6200000000001" y="657.04" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', 'Helvetica Neue', Arial, sans-serif" font-size="14" font-weight="600" fill="#1B1B1B" text-anchor="middle">デザイントークン lib/theme.ts</text>
+<rect x="920" y="150" width="620" height="390" rx="18" fill="#FFFFFF" stroke="#DDDBD4" stroke-width="1.5"/>
+<rect x="920" y="150" width="620" height="46" rx="18" fill="#2E7D4F" stroke="none" stroke-width="1.5"/>
+<rect x="920" y="174" width="620" height="22" rx="0" fill="#2E7D4F" stroke="none" stroke-width="1.5"/>
+<text x="942" y="180" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', 'Helvetica Neue', Arial, sans-serif" font-size="17" font-weight="700" fill="#FFFFFF" text-anchor="start">サーバーサイド　Convex</text>
+<text x="1518" y="180" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', 'Helvetica Neue', Arial, sans-serif" font-size="13" font-weight="400" fill="#DDEFE3" text-anchor="end">TypeScript · リアルタイム · トランザクション</text>
+<text x="944" y="222" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', 'Helvetica Neue', Arial, sans-serif" font-size="12" font-weight="700" fill="#6B6B66" text-anchor="start">関数（convex/*.ts）　query 15 · mutation 13</text>
+<rect x="944" y="234" width="78.83999999999999" height="32" rx="9" fill="#E6F2EA" stroke="none" stroke-width="1.5"/>
+<text x="983.42" y="255.04" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', 'Helvetica Neue', Arial, sans-serif" font-size="14" font-weight="600" fill="#2E7D4F" text-anchor="middle">farmers</text>
+<rect x="1030.84" y="234" width="86.96" height="32" rx="9" fill="#E6F2EA" stroke="none" stroke-width="1.5"/>
+<text x="1074.32" y="255.04" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', 'Helvetica Neue', Arial, sans-serif" font-size="14" font-weight="600" fill="#2E7D4F" text-anchor="middle">products</text>
+<rect x="1125.8" y="234" width="119.44000000000001" height="32" rx="9" fill="#E6F2EA" stroke="none" stroke-width="1.5"/>
+<text x="1185.52" y="255.04" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', 'Helvetica Neue', Arial, sans-serif" font-size="14" font-weight="600" fill="#2E7D4F" text-anchor="middle">reservations</text>
+<rect x="1253.24" y="234" width="78.83999999999999" height="32" rx="9" fill="#E6F2EA" stroke="none" stroke-width="1.5"/>
+<text x="1292.66" y="255.04" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', 'Helvetica Neue', Arial, sans-serif" font-size="14" font-weight="600" fill="#2E7D4F" text-anchor="middle">reviews</text>
+<rect x="1340.08" y="234" width="78.83999999999999" height="32" rx="9" fill="#E6F2EA" stroke="none" stroke-width="1.5"/>
+<text x="1379.5" y="255.04" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', 'Helvetica Neue', Arial, sans-serif" font-size="14" font-weight="600" fill="#2E7D4F" text-anchor="middle">watches</text>
+<rect x="1426.9199999999998" y="234" width="62.599999999999994" height="32" rx="9" fill="#E6F2EA" stroke="none" stroke-width="1.5"/>
+<text x="1458.2199999999998" y="255.04" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', 'Helvetica Neue', Arial, sans-serif" font-size="14" font-weight="600" fill="#2E7D4F" text-anchor="middle">users</text>
+<rect x="944" y="274" width="70.72" height="32" rx="9" fill="#E6F2EA" stroke="none" stroke-width="1.5"/>
+<text x="979.36" y="295.04" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', 'Helvetica Neue', Arial, sans-serif" font-size="14" font-weight="600" fill="#2E7D4F" text-anchor="middle">images</text>
+<rect x="1022.72" y="274" width="54.48" height="32" rx="9" fill="#E6F2EA" stroke="none" stroke-width="1.5"/>
+<text x="1049.96" y="295.04" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', 'Helvetica Neue', Arial, sans-serif" font-size="14" font-weight="600" fill="#2E7D4F" text-anchor="middle">seed</text>
+<text x="944" y="328" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', 'Helvetica Neue', Arial, sans-serif" font-size="12" font-weight="400" fill="#6B6B66" text-anchor="start">承認済み生産者のみ予約可・受取時間帯・ステータス遷移・決済フラグを</text>
+<text x="944" y="346" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', 'Helvetica Neue', Arial, sans-serif" font-size="12" font-weight="400" fill="#6B6B66" text-anchor="start">サーバー側で検証。クライアントは Convex の関数を呼ぶだけ。</text>
+<text x="944" y="376" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', 'Helvetica Neue', Arial, sans-serif" font-size="12" font-weight="700" fill="#6B6B66" text-anchor="start">データベース（schema.ts）</text>
+<rect x="944" y="388" width="62.599999999999994" height="32" rx="9" fill="#EFEEE9" stroke="none" stroke-width="1.5"/>
+<text x="975.3" y="409.04" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', 'Helvetica Neue', Arial, sans-serif" font-size="14" font-weight="600" fill="#1B1B1B" text-anchor="middle">users</text>
+<rect x="1014.6" y="388" width="78.83999999999999" height="32" rx="9" fill="#EFEEE9" stroke="none" stroke-width="1.5"/>
+<text x="1054.02" y="409.04" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', 'Helvetica Neue', Arial, sans-serif" font-size="14" font-weight="600" fill="#1B1B1B" text-anchor="middle">farmers</text>
+<rect x="1101.44" y="388" width="86.96" height="32" rx="9" fill="#EFEEE9" stroke="none" stroke-width="1.5"/>
+<text x="1144.92" y="409.04" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', 'Helvetica Neue', Arial, sans-serif" font-size="14" font-weight="600" fill="#1B1B1B" text-anchor="middle">products</text>
+<rect x="1196.4" y="388" width="119.44000000000001" height="32" rx="9" fill="#EFEEE9" stroke="none" stroke-width="1.5"/>
+<text x="1256.1200000000001" y="409.04" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', 'Helvetica Neue', Arial, sans-serif" font-size="14" font-weight="600" fill="#1B1B1B" text-anchor="middle">reservations</text>
+<rect x="1323.8400000000001" y="388" width="78.83999999999999" height="32" rx="9" fill="#EFEEE9" stroke="none" stroke-width="1.5"/>
+<text x="1363.2600000000002" y="409.04" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', 'Helvetica Neue', Arial, sans-serif" font-size="14" font-weight="600" fill="#1B1B1B" text-anchor="middle">reviews</text>
+<rect x="944" y="428" width="143.8" height="32" rx="9" fill="#EFEEE9" stroke="none" stroke-width="1.5"/>
+<text x="1015.9" y="449.04" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', 'Helvetica Neue', Arial, sans-serif" font-size="14" font-weight="600" fill="#1B1B1B" text-anchor="middle">consumerRatings</text>
+<rect x="1095.8" y="428" width="78.83999999999999" height="32" rx="9" fill="#EFEEE9" stroke="none" stroke-width="1.5"/>
+<text x="1135.22" y="449.04" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', 'Helvetica Neue', Arial, sans-serif" font-size="14" font-weight="600" fill="#1B1B1B" text-anchor="middle">watches</text>
+<text x="944" y="486" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', 'Helvetica Neue', Arial, sans-serif" font-size="12" font-weight="700" fill="#6B6B66" text-anchor="start">ファイルストレージ</text>
+<rect x="944" y="498" width="251.32000000000005" height="32" rx="9" fill="#EFEEE9" stroke="none" stroke-width="1.5"/>
+<text x="1069.66" y="519.04" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', 'Helvetica Neue', Arial, sans-serif" font-size="14" font-weight="600" fill="#1B1B1B" text-anchor="middle">顔写真・商品画像（ctx.storage）</text>
+<rect x="920" y="570" width="620" height="100" rx="18" fill="#FFFFFF" stroke="#DDDBD4" stroke-width="1.5"/>
+<rect x="920" y="570" width="8" height="100" rx="4" fill="#2F5FA8" stroke="none" stroke-width="1.5"/>
+<text x="948" y="604" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', 'Helvetica Neue', Arial, sans-serif" font-size="17" font-weight="700" fill="#1B1B1B" text-anchor="start">外部サービス　Mapbox</text>
+<text x="948" y="630" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', 'Helvetica Neue', Arial, sans-serif" font-size="12" font-weight="400" fill="#1B1B1B" text-anchor="start">地図タイル・ライトスタイル。生産者ピンは顔写真＋★評価、PR は大きく表示。</text>
+<text x="948" y="650" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', 'Helvetica Neue', Arial, sans-serif" font-size="12" font-weight="400" fill="#6B6B66" text-anchor="start">トークン未設定 / タイル 401 のときは空のオフラインスタイルにフォールバック。</text>
+<line x1="706" y1="340" x2="914" y2="340" stroke="#1B1B1B" stroke-width="2.2" marker-end="url(#ah)" marker-start="url(#ah2)"/>
+<text x="810.0" y="326.0" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', 'Helvetica Neue', Arial, sans-serif" font-size="12" font-weight="700" fill="#1B1B1B" text-anchor="middle">リアルタイム同期（WebSocket）</text>
+<text x="810.0" y="360.0" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', 'Helvetica Neue', Arial, sans-serif" font-size="11" font-weight="400" fill="#6B6B66" text-anchor="middle">EXPO_PUBLIC_CONVEX_URL</text>
+<line x1="706" y1="620" x2="914" y2="620" stroke="#1B1B1B" stroke-width="2.2" marker-end="url(#ah)"/>
+<text x="810.0" y="606.0" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', 'Helvetica Neue', Arial, sans-serif" font-size="12" font-weight="700" fill="#1B1B1B" text-anchor="middle">地図タイル取得</text>
+<text x="810.0" y="640.0" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', 'Helvetica Neue', Arial, sans-serif" font-size="11" font-weight="400" fill="#6B6B66" text-anchor="middle">EXPO_PUBLIC_MAPBOX_TOKEN</text>
+<rect x="60" y="720" width="460" height="220" rx="18" fill="#FFFFFF" stroke="#DDDBD4" stroke-width="1.5"/>
+<rect x="60" y="720" width="460" height="8" rx="4" fill="#1B1B1B" stroke="none" stroke-width="1.5"/>
+<text x="84" y="764" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', 'Helvetica Neue', Arial, sans-serif" font-size="17" font-weight="800" fill="#1B1B1B" text-anchor="start">開発</text>
+<text x="84" y="798" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', 'Helvetica Neue', Arial, sans-serif" font-size="13" font-weight="400" fill="#1B1B1B" text-anchor="start">TypeScript（tsc --noEmit）</text>
+<text x="84" y="824" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', 'Helvetica Neue', Arial, sans-serif" font-size="13" font-weight="400" fill="#1B1B1B" text-anchor="start">ESLint（expo lint）</text>
+<text x="84" y="850" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', 'Helvetica Neue', Arial, sans-serif" font-size="13" font-weight="400" fill="#1B1B1B" text-anchor="start">npx convex dev（ローカルは anonymous モード）</text>
+<text x="84" y="876" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', 'Helvetica Neue', Arial, sans-serif" font-size="13" font-weight="400" fill="#1B1B1B" text-anchor="start">npx expo run:ios（Dev Client、Mapbox は Expo Go 不可）</text>
+<text x="84" y="902" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', 'Helvetica Neue', Arial, sans-serif" font-size="13" font-weight="400" fill="#1B1B1B" text-anchor="start">.env.local に CONVEX_URL / MAPBOX_TOKEN</text>
+<rect x="560" y="720" width="460" height="220" rx="18" fill="#FFFFFF" stroke="#DDDBD4" stroke-width="1.5"/>
+<rect x="560" y="720" width="460" height="8" rx="4" fill="#2E7D4F" stroke="none" stroke-width="1.5"/>
+<text x="584" y="764" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', 'Helvetica Neue', Arial, sans-serif" font-size="17" font-weight="800" fill="#1B1B1B" text-anchor="start">テスト</text>
+<text x="584" y="798" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', 'Helvetica Neue', Arial, sans-serif" font-size="13" font-weight="400" fill="#1B1B1B" text-anchor="start">Maestro E2E（iOS シミュレータ）</text>
+<text x="584" y="824" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', 'Helvetica Neue', Arial, sans-serif" font-size="13" font-weight="400" fill="#1B1B1B" text-anchor="start">consumer → farmer → admin の 3 フロー</text>
+<text x="584" y="850" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', 'Helvetica Neue', Arial, sans-serif" font-size="13" font-weight="400" fill="#1B1B1B" text-anchor="start">実行中のスクショを docs/e2e/ に保存</text>
+<text x="584" y="876" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', 'Helvetica Neue', Arial, sans-serif" font-size="13" font-weight="400" fill="#1B1B1B" text-anchor="start">a11y ラベル・testID をフローから参照</text>
+<rect x="1060" y="720" width="480" height="220" rx="18" fill="#FFFFFF" stroke="#DDDBD4" stroke-width="1.5"/>
+<rect x="1060" y="720" width="480" height="8" rx="4" fill="#B7791F" stroke="none" stroke-width="1.5"/>
+<text x="1084" y="764" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', 'Helvetica Neue', Arial, sans-serif" font-size="17" font-weight="800" fill="#1B1B1B" text-anchor="start">ビルド / 配布</text>
+<text x="1084" y="798" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', 'Helvetica Neue', Arial, sans-serif" font-size="13" font-weight="400" fill="#1B1B1B" text-anchor="start">EAS Build（production, autoIncrement）</text>
+<text x="1084" y="824" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', 'Helvetica Neue', Arial, sans-serif" font-size="13" font-weight="400" fill="#1B1B1B" text-anchor="start">→ TestFlight（jp.hatakemap.app）</text>
+<text x="1084" y="850" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', 'Helvetica Neue', Arial, sans-serif" font-size="13" font-weight="400" fill="#1B1B1B" text-anchor="start">Convex: npx convex deploy → --prod にシード</text>
+<text x="1084" y="876" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', 'Helvetica Neue', Arial, sans-serif" font-size="13" font-weight="400" fill="#1B1B1B" text-anchor="start">EAS env に CONVEX_URL / MAPBOX_TOKEN を登録</text>
+<text x="1540" y="976" font-family="'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', 'Helvetica Neue', Arial, sans-serif" font-size="12" font-weight="400" fill="#6B6B66" text-anchor="end">hatake-map · Expo SDK 57 · Convex · Mapbox</text>
+</svg>
