@@ -3,16 +3,21 @@
   "version": "1.0.0",
   "main": "expo-router/entry",
   "dependencies": {
+    "@expo-google-fonts/ibm-plex-mono": "^0.4.1",
+    "@expo-google-fonts/zen-kaku-gothic-new": "^0.4.1",
+    "@expo/vector-icons": "^15.1.1",
     "@gorhom/bottom-sheet": "^5.2.14",
     "@rnmapbox/maps": "^10.3.5",
     "convex": "^1.46.0",
     "expo": "~57.0.25",
     "expo-constants": "~57.0.19",
+    "expo-font": "~57.0.4",
     "expo-haptics": "~57.0.3",
     "expo-image": "~57.0.5",
     "expo-linking": "~57.0.11",
     "expo-location": "~57.0.20",
     "expo-router": "~57.0.23",
+    "expo-splash-screen": "~57.0.9",
     "expo-status-bar": "~57.0.1",
     "react": "19.2.3",
     "react-native": "0.86.3",
@@ -25,6 +30,8 @@
   },
   "devDependencies": {
     "@types/react": "~19.2.2",
+    "eslint": "^9.0.0",
+    "eslint-config-expo": "~57.0.2",
     "typescript": "~6.0.3"
   },
   "scripts": {
@@ -32,7 +39,7 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
-    "convex": "convex dev",
+    "backend": "convex dev",
     "seed": "convex run seed:run",
     "typecheck": "tsc --noEmit",
     "lint": "expo lint"

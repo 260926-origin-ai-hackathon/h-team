@@ -2,6 +2,9 @@ import { mutation, query } from "./_generated/server";
 import { v } from "convex/values";
 import type { Id } from "./_generated/dataModel";
 
+/** Flat shipping per farm (each farm ships directly). */
+export const SHIPPING_PER_FARM = 880;
+
 /**
  * Pseudo-checkout. Creates the order + items, decrements stock, and unlocks
  * each farmer in the user's collection. Returns newly unlocked farmer ids so
@@ -38,8 +41,11 @@ export const create = mutation({
       await ctx.db.patch(product._id, { stock: product.stock - item.quantity });
     }
 
-    const total = lines.reduce((s, l) => s + l.price * l.quantity, 0);
-    const orderId = await ctx.db.insert("orders", { userId, createdAt: now, total });
+    const subtotal = lines.reduce((s, l) => s + l.price * l.quantity, 0);
+    const farmCount = new Set(lines.map((l) => l.farmerId)).size;
+    const shipping = farmCount * SHIPPING_PER_FARM;
+    const total = subtotal + shipping;
+    const orderId = await ctx.db.insert("orders", { userId, createdAt: now, subtotal, shipping, total });
     for (const l of lines) {
       await ctx.db.insert("orderItems", { orderId, ...l });
     }
@@ -47,6 +53,7 @@ export const create = mutation({
     // Unlock farmers (one increment per farmer per order)
     const farmerIds = [...new Set(lines.map((l) => l.farmerId))];
     const newlyUnlocked: Id<"farmers">[] = [];
+    const cards: { farmerId: Id<"farmers">; count: number }[] = [];
     for (const farmerId of farmerIds) {
       const existing = await ctx.db
         .query("farmerCollections")
@@ -54,6 +61,7 @@ export const create = mutation({
         .unique();
       if (existing) {
         await ctx.db.patch(existing._id, { purchaseCount: existing.purchaseCount + 1 });
+        cards.push({ farmerId, count: existing.purchaseCount + 1 });
       } else {
         await ctx.db.insert("farmerCollections", {
           userId,
@@ -62,10 +70,11 @@ export const create = mutation({
           purchaseCount: 1,
         });
         newlyUnlocked.push(farmerId);
+        cards.push({ farmerId, count: 1 });
       }
     }
 
-    return { orderId, total, newlyUnlocked };
+    return { orderId, total, newlyUnlocked, cards };
   },
 });
 

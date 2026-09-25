@@ -2,33 +2,43 @@ import { create } from "zustand";
 import type { FarmerId, ProductId } from "./types";
 
 export type CartItem = { productId: ProductId; farmerId: FarmerId; quantity: number };
-
-type MapFilters = { query: string; crop: string | null; unlockedOnly: boolean };
+export type FilterKind = "all" | "today" | "owned" | "locked";
+export type RevealItem = { farmerId: FarmerId; count: number };
 
 type AppState = {
   selectedFarmerId: FarmerId | null;
   selectFarmer: (id: FarmerId | null) => void;
 
-  filters: MapFilters;
-  setFilters: (patch: Partial<MapFilters>) => void;
+  filter: FilterKind;
+  setFilter: (f: FilterKind) => void;
+  query: string;
+  setQuery: (q: string) => void;
 
   cart: CartItem[];
   addToCart: (item: CartItem) => void;
   setQuantity: (productId: ProductId, quantity: number) => void;
   clearCart: () => void;
 
-  /** Farmers whose card reveal animation is pending (queued after purchase). */
-  revealQueue: FarmerId[];
-  enqueueReveal: (ids: FarmerId[]) => void;
+  /** Cards to reveal after a purchase, in order. */
+  revealQueue: RevealItem[];
+  enqueueReveal: (items: RevealItem[]) => void;
   shiftReveal: () => void;
+  clearReveal: () => void;
+
+  toast: string | null;
+  showToast: (msg: string) => void;
 };
+
+let toastTimer: ReturnType<typeof setTimeout> | null = null;
 
 export const useStore = create<AppState>((set) => ({
   selectedFarmerId: null,
   selectFarmer: (id) => set({ selectedFarmerId: id }),
 
-  filters: { query: "", crop: null, unlockedOnly: false },
-  setFilters: (patch) => set((s) => ({ filters: { ...s.filters, ...patch } })),
+  filter: "all",
+  setFilter: (filter) => set({ filter }),
+  query: "",
+  setQuery: (query) => set({ query }),
 
   cart: [],
   addToCart: (item) =>
@@ -53,6 +63,16 @@ export const useStore = create<AppState>((set) => ({
   clearCart: () => set({ cart: [] }),
 
   revealQueue: [],
-  enqueueReveal: (ids) => set((s) => ({ revealQueue: [...s.revealQueue, ...ids] })),
+  enqueueReveal: (items) => set((s) => ({ revealQueue: [...s.revealQueue, ...items] })),
   shiftReveal: () => set((s) => ({ revealQueue: s.revealQueue.slice(1) })),
+  clearReveal: () => set({ revealQueue: [] }),
+
+  toast: null,
+  showToast: (msg) => {
+    if (toastTimer) clearTimeout(toastTimer);
+    set({ toast: msg });
+    toastTimer = setTimeout(() => set({ toast: null }), 1600);
+  },
 }));
+
+export const cartCount = (cart: CartItem[]) => cart.reduce((a, c) => a + c.quantity, 0);

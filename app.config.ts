@@ -9,12 +9,6 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   orientation: "portrait",
   icon: "./assets/icon.png",
   userInterfaceStyle: "light",
-  newArchEnabled: true,
-  splash: {
-    image: "./assets/splash-icon.png",
-    resizeMode: "contain",
-    backgroundColor: "#F7F6F2",
-  },
   ios: {
     supportsTablet: false,
     bundleIdentifier: "dev.farmercards.app",
@@ -26,7 +20,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   android: {
     package: "dev.farmercards.app",
     adaptiveIcon: {
-      backgroundColor: "#F7F6D2",
+      backgroundColor: "#FAFAF8",
       foregroundImage: "./assets/android-icon-foreground.png",
       backgroundImage: "./assets/android-icon-background.png",
       monochromeImage: "./assets/android-icon-monochrome.png",
@@ -37,6 +31,10 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   plugins: [
     "expo-router",
     "expo-image",
+    [
+      "expo-splash-screen",
+      { image: "./assets/splash-icon.png", resizeMode: "contain", backgroundColor: "#FAFAF8" },
+    ],
     [
       "expo-location",
       {
