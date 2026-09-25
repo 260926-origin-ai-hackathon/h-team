@@ -43,7 +43,7 @@
     "seed": "convex run seed:run",
     "typecheck": "tsc --noEmit",
     "lint": "expo lint",
-    "e2e": "maestro test e2e/farmer-flow.yaml"
+    "e2e": "maestro test e2e/consumer.yaml && maestro test e2e/farmer.yaml && maestro test e2e/admin.yaml"
   },
   "private": true
 }

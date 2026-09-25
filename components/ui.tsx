@@ -266,6 +266,10 @@ export function Field({
         multiline={multiline}
         keyboardType={keyboardType}
         accessibilityLabel={label}
+        testID={`field-${label}`}
+        returnKeyType={multiline ? "default" : "done"}
+        autoCorrect={false}
+        spellCheck={false}
         style={{
           backgroundColor: colors.white,
           borderWidth: 1,

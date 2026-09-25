@@ -107,7 +107,7 @@ export default function FarmerProductEditScreen() {
           <ToggleRow label="発送代行に対応" hint="受取だけでなく発送も選べるようにする" value={deliveryAvailable} onChange={setDeliveryAvailable} />
           <ToggleRow label="公開する" hint="オフにすると消費者に表示されません" value={available} onChange={setAvailable} />
         </Card>
-        <Btn label={busy ? "保存中…" : isNew ? "商品を追加" : "保存する"} variant="green" height={50} disabled={busy} onPress={save} />
+        <Btn label={busy ? "保存中…" : isNew ? "この内容で追加" : "保存する"} variant="green" height={50} disabled={busy} onPress={save} />
         {!isNew && !confirmDelete && <Btn label="この商品を削除" variant="outline" height={44} onPress={() => setConfirmDelete(true)} />}
         {!isNew && confirmDelete && (
           <View style={{ flexDirection: "row", gap: 8 }}>

@@ -53,7 +53,10 @@ export default function CartScreen() {
       });
       clearCart();
       showToast("予約をリクエストしました。生産者の確定をお待ちください");
-      router.replace(`/consumer/reservation/${id}`);
+      // Land on the reservation list with the new reservation on top, so "back" returns to the list.
+      router.dismissAll();
+      router.navigate("/consumer/reservations");
+      router.push(`/consumer/reservation/${id}`);
     } catch (e) {
       showToast(e instanceof Error ? e.message.replace(/^.*Uncaught Error: /, "") : "予約に失敗しました");
     } finally {

@@ -1,0 +1,82 @@
+appId: dev.farmercards.app
+---
+- stopApp
+- openLink: "farmercards://expo-development-client/?url=http%3A%2F%2Flocalhost%3A8081"
+- extendedWaitUntil:
+    visible: "生産者として新規登録"
+    timeout: 90000
+- tapOn: "生産者として新規登録"
+- extendedWaitUntil:
+    visible: ".*まずはプロフィールを作成.*"
+    timeout: 30000
+- takeScreenshot: shots/a01-farmer-empty
+- tapOn: "プロフィールを作成"
+- extendedWaitUntil:
+    visible: "名前"
+    timeout: 10000
+- scrollUntilVisible:
+    element: "名前"
+    direction: DOWN
+    centerElement: true
+- tapOn:
+    id: "field-名前"
+- inputText: "Arai Minoru"
+- pressKey: Enter
+- scrollUntilVisible:
+    element: "農園名"
+    direction: DOWN
+    centerElement: true
+- tapOn:
+    id: "field-農園名"
+- inputText: "Arai Farm"
+- pressKey: Enter
+- scrollUntilVisible:
+    element: "市区町村"
+    direction: DOWN
+    centerElement: true
+- tapOn:
+    id: "field-市区町村"
+- inputText: "Sakai"
+- pressKey: Enter
+- scrollUntilVisible:
+    element: "受取場所（住所・目印）"
+    direction: DOWN
+    centerElement: true
+- tapOn:
+    id: "field-受取場所（住所・目印）"
+- inputText: "Sakai Minami, Arai Farm gate"
+- pressKey: Enter
+- scrollUntilVisible:
+    element: "受取可能な曜日・時間"
+    direction: DOWN
+    centerElement: true
+- tapOn:
+    id: "field-受取可能な曜日・時間"
+- inputText: "Sat 9:00-12:00"
+- pressKey: Enter
+- scrollUntilVisible:
+    element: ".*登録して承認を申請.*"
+    direction: DOWN
+- tapOn: ".*登録して承認を申請.*"
+- extendedWaitUntil:
+    visible: ".*承認待ち.*"
+    timeout: 15000
+- waitForAnimationToEnd
+- takeScreenshot: shots/a02-pending
+
+# 運営で承認
+- tapOn: "ロールを切り替え"
+- extendedWaitUntil:
+    visible: "運営として承認する"
+    timeout: 10000
+- tapOn: "運営として承認する"
+- extendedWaitUntil:
+    visible: ".*生産者の承認.*"
+    timeout: 10000
+- waitForAnimationToEnd
+- takeScreenshot: shots/a03-admin
+- tapOn:
+    text: ".*承認する.*"
+    index: 0
+- assertVisible: ".*を承認しました.*"
+- takeScreenshot: shots/a04-approved

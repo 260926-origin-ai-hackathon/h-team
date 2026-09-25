@@ -4,12 +4,15 @@ import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { ConvexProvider } from "convex/react";
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
-import { View } from "react-native";
+import { LogBox, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { ToastHost } from "../components/ToastHost";
 import { Txt } from "../components/ui";
 import { CONVEX_URL, convex } from "../lib/convex";
 import { colors } from "../lib/theme";
+
+// Harmless RN Animated warning (emitted by the native stack/keyboard); keep the dev banner off the tab bar.
+LogBox.ignoreLogs(["Sending `onAnimatedValueUpdate` with no listeners registered."]);
 
 export default function RootLayout() {
   const [fontsLoaded] = useFonts({

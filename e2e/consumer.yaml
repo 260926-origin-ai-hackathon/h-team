@@ -1,0 +1,116 @@
+appId: dev.farmercards.app
+---
+- stopApp
+- openLink: "farmercards://expo-development-client/?url=http%3A%2F%2Flocalhost%3A8081"
+- extendedWaitUntil:
+    visible: "消費者として使う"
+    timeout: 90000
+- takeScreenshot: shots/c00-role
+- tapOn: "消費者として使う"
+- extendedWaitUntil:
+    visible: ".*はたけマップ.*"
+    timeout: 30000
+- waitForAnimationToEnd
+- takeScreenshot: shots/c01-map
+
+# marker → sheet（藤井さん・若ごぼう）
+- tapOn: "藤井 翔 若ごぼう"
+- extendedWaitUntil:
+    visible: ".*生産者を見る.*"
+    timeout: 10000
+- waitForAnimationToEnd
+- takeScreenshot: shots/c02-sheet
+- tapOn: ".*生産者を見る.*"
+- extendedWaitUntil:
+    visible: ".*01 · 人.*"
+    timeout: 10000
+- waitForAnimationToEnd
+- takeScreenshot: shots/c03-farmer-top
+- scrollUntilVisible:
+    element: ".*受取場所.*"
+    direction: DOWN
+- takeScreenshot: shots/c04-farmer-pickup
+- scrollUntilVisible:
+    element: ".*件のレビュー.*"
+    direction: DOWN
+- takeScreenshot: shots/c05-farmer-reviews
+- scrollUntilVisible:
+    element: ".*八尾の若ごぼう.*"
+    direction: UP
+- tapOn:
+    text: ".*八尾の若ごぼう.*"
+    index: 0
+- extendedWaitUntil:
+    visible: ".*予約カゴに入れる.*"
+    timeout: 10000
+- waitForAnimationToEnd
+- takeScreenshot: shots/c06-product
+- waitForAnimationToEnd
+- tapOn:
+    text: ".*この商品を予約する.*"
+    retryTapIfNoChange: true
+- extendedWaitUntil:
+    visible: ".*受取方法.*"
+    timeout: 8000
+    optional: true
+- runFlow:
+    when:
+      notVisible: ".*受取方法.*"
+    commands:
+      - tapOn: ".*この商品を予約する.*"
+
+# 予約カゴ → 受取日時を選んでリクエスト
+- extendedWaitUntil:
+    visible: ".*受取方法.*"
+    timeout: 10000
+- waitForAnimationToEnd
+- takeScreenshot: shots/c07-cart
+- tapOn: "明日"
+- scrollUntilVisible:
+    element: "10:00"
+    direction: DOWN
+- tapOn: "10:00"
+- scrollUntilVisible:
+    element: ".*予約をリクエスト.*"
+    direction: DOWN
+- takeScreenshot: shots/c08-cart-filled
+- tapOn: ".*予約をリクエスト.*"
+- extendedWaitUntil:
+    visible: ".*予約の詳細.*"
+    timeout: 15000
+- waitForAnimationToEnd
+- assertVisible: ".*リクエスト中.*"
+- takeScreenshot: shots/c09-reservation-requested
+
+# 予約一覧 → 受取完了済みの予約にレビューを書く
+- tapOn: "戻る"
+- extendedWaitUntil:
+    visible: ".*進行中.*"
+    timeout: 10000
+- waitForAnimationToEnd
+- takeScreenshot: shots/c10-reservations
+- scrollUntilVisible:
+    element: "予約 大西 隆 受取完了"
+    direction: DOWN
+- tapOn: "予約 大西 隆 受取完了"
+- extendedWaitUntil:
+    visible: ".*レビューを書く.*"
+    timeout: 10000
+- scrollUntilVisible:
+    element: ".*レビューを書く.*"
+    direction: DOWN
+- tapOn: ".*レビューを書く.*"
+- extendedWaitUntil:
+    visible: ".*どうでしたか.*"
+    timeout: 10000
+- tapOn: "5つ星"
+- tapOn:
+    id: "field-コメント"
+- inputText: "Sweet chestnuts, smooth pickup."
+- hideKeyboard
+- takeScreenshot: shots/c11-review-form
+- tapOn: ".*投稿する.*"
+- extendedWaitUntil:
+    visible: ".*レビュー投稿済み.*"
+    timeout: 10000
+- takeScreenshot: shots/c12-reviewed
