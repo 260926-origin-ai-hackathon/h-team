@@ -12,6 +12,9 @@ export const fulfillment = v.union(v.literal("pickup"), v.literal("delivery"));
 export const farmerStatus = v.union(v.literal("pending"), v.literal("approved"), v.literal("rejected"));
 
 export default defineSchema({
+  // Uploaded demo photos (Convex File Storage), keyed by name; the seed looks them up.
+  assets: defineTable({ key: v.string(), storageId: v.id("_storage") }).index("by_key", ["key"]),
+
   users: defineTable({
     userId: v.string(), // demo: fixed ids
     name: v.string(),

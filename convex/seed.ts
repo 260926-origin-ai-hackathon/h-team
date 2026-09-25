@@ -19,6 +19,7 @@ type SeedProduct = {
   img: string;
   /** 出荷予定（未公開）: 何日後に出荷予定か */
   upcomingInDays?: number;
+  imageAsset?: string;
 };
 
 type SeedFarmer = {
@@ -48,9 +49,42 @@ type SeedFarmer = {
   status?: "pending" | "approved";
   owner?: string;
   sns?: { instagram?: string; x?: string; website?: string };
+  /** asset keys (uploaded via scripts/upload-assets.mjs) — used instead of placeholder URLs when present */
+  avatarAsset?: string;
+  farmAssets?: string[];
 };
 
 const FARMERS: SeedFarmer[] = [
+  {
+    // 実在の農園「ひろせファーム」（hirose-f.com）のモックデータ。価格・受取時間帯・レビューは架空。
+    name: "廣瀬 裕", kana: "ひろせ ゆたか", farmName: "ひろせファーム", face: 33, tint: "#E4EFD9",
+    prefecture: "大阪府", city: "和泉市", latitude: 34.418, longitude: 135.468,
+    crops: ["白菜", "ブロッコリー", "芽キャベツ", "さつまいも", "ほうれん草", "とうもろこし", "枝豆", "おくら"], years: 20, season: "通年", seasonState: "now",
+    catchphrase: "やさいといっしょに元気を届けたい。",
+    bio: "槇尾山の麓「和泉市仏並町」の自然豊かな農地で野菜を栽培しています。和泉山脈の父鬼川の清らかな上流水に恵まれた土地で、水・肥料・鮮度そして安全にこだわり、皆様に安心と安全をお届けします。",
+    kodawari: [
+      { title: "水・肥料・鮮度へのこだわり", body: "父鬼川上流の清らかな水と、肥料・鮮度、そして安全にこだわり、安心と安全をお届けします。栽培期間中農薬無散布の品目もあります。" },
+      { title: "農業体験", body: "農業体験を通じて、自然と野菜と触れ合い、かけがえのない自然の世界へご招待します。芋ほり大会、もぎたてとうもろこしを食す会など。" },
+      { title: "地場野菜の宅配", body: "堺・泉州・和歌山の安全・安心地場野菜を、ご自宅まで宅配いたします。朝どれを選別し、クール便不要な距離は手渡しで。" },
+    ],
+    pickupAddress: "大阪府和泉市仏並町 ひろせファーム 仏並町圃場（槇尾山の麓・父鬼川上流）",
+    pickupSlots: [{ days: [6, 0], start: 9, end: 12 }, { days: [3], start: 14, end: 17 }],
+    pickupNote: "配達区域（泉北ニュータウン・深井・和泉中央周辺）は手渡し配達も相談できます。",
+    prMessage: "秋の収穫体験会（11月）予約受付中。秋野菜の収穫体験＆みんなでピザを作ろう！ 恒例の芋ほり大会も毎年大好評です。",
+    sns: { website: "https://hirose-f.com", instagram: "hirose_farm" },
+    owner: "demo-farmer",
+    avatarAsset: "hirose-avatar",
+    farmAssets: ["hirose-farm-1", "hirose-farm-2", "hirose-farm-3", "hirose-farm-4", "hirose-farm-5"],
+    farms: ["hirose-1", "hirose-2", "hirose-3"],
+    products: [
+      { name: "丸おくら", unit: "1袋（約10本）", price: 350, description: "みずみずしく柔らかい食感。さっと茹でて刻めば粘りが楽しめます。", harvest: "朝どれ・出荷中", harvestedToday: true, delivery: true, stock: 20, img: "hirose-okura", imageAsset: "hirose-product-okura" },
+      { name: "つるむらさき", unit: "1束", price: 300, description: "栽培期間中農薬無散布。おひたしに。", harvest: "朝どれ・出荷中", harvestedToday: true, delivery: true, stock: 15, img: "hirose-tsuru", imageAsset: "hirose-product-tsurumurasaki" },
+      { name: "モロヘイヤ", unit: "1束", price: 300, description: "栽培期間中農薬無散布。刻んでスープや納豆に。", harvest: "出荷中", delivery: true, stock: 15, img: "hirose-moro", imageAsset: "hirose-product-moroheiya" },
+      { name: "ジャンボピーマン", unit: "3個", price: 400, description: "肉厚で甘みたっぷり。肉詰めにおすすめ。", harvest: "出荷中", delivery: true, stock: 12, img: "hirose-piman", imageAsset: "hirose-product-piman" },
+      { name: "白菜", unit: "1玉", price: 450, description: "槇尾山の麓で育った冬の白菜。鍋に。", harvest: "11月出荷予定", stock: 40, img: "hirose-hakusai", imageAsset: "hirose-product-hakusai", upcomingInDays: 45 },
+      { name: "さつまいも（芋ほり大会）", unit: "1kg", price: 600, description: "恒例の芋ほり大会でも掘れる、ほくほくのさつまいも。", harvest: "10月出荷予定", stock: 60, img: "hirose-imo", imageAsset: "hirose-product-satsumaimo", upcomingInDays: 20 },
+    ],
+  },
   {
     name: "山本 和也", kana: "やまもと かずや", farmName: "山本農園", face: 12, tint: "#F0E4F1",
     prefecture: "大阪府", city: "貝塚市", latitude: 34.43, longitude: 135.36,
@@ -179,7 +213,6 @@ const FARMERS: SeedFarmer[] = [
     pickupAddress: "大阪府八尾市恩智 藤井農園 母屋前",
     pickupSlots: [{ days: [3, 6], start: 9, end: 12 }],
     pickupNote: "インターホンを押してください。",
-    owner: "demo-farmer",
     sns: { instagram: "fujii_gobo", website: "https://example.com/fujii" },
     farms: ["fujii-1", "fujii-2"],
     products: [
@@ -258,12 +291,13 @@ const USERS = [
   { userId: "demo-consumer", name: "田中 花", role: "consumer" as const, phone: "090-1234-5678", address: "大阪市北区中之島1-1-1", bio: "野菜好き。週末に畑まで取りに行くのが楽しみです。" },
   { userId: "consumer-sasaki", name: "佐々木 健", role: "consumer" as const },
   { userId: "consumer-kobayashi", name: "小林 美月", role: "consumer" as const },
-  { userId: "demo-farmer", name: "藤井 翔", role: "farmer" as const },
+  { userId: "demo-farmer", name: "廣瀬 裕", role: "farmer" as const },
   { userId: "demo-farmer-new", name: "新規の生産者", role: "farmer" as const },
   { userId: "demo-admin", name: "運営", role: "admin" as const },
 ];
 
 const REVIEWS: Record<string, [string, number, string, number][]> = {
+  "廣瀬 裕": [["consumer-sasaki", 5, "芋ほり大会に家族で参加。子どもが野菜を食べるようになりました。", 4], ["demo-consumer", 5, "朝どれのおくらが本当に柔らかい。受取場所も分かりやすかったです。", 9], ["consumer-kobayashi", 4, "泉北まで手渡しで届けてもらえて助かります。", 16]],
   // farmer name → [author userId, rating, comment, days ago]
   "山本 和也": [["consumer-sasaki", 5, "取りに行ったら畑も見せてもらえました。水なすは本当に生でいけます。", 3], ["consumer-kobayashi", 4, "受取場所が分かりやすく、時間どおりに用意されていました。", 12], ["demo-consumer", 5, "ぬか漬けが絶品。子どもも食べました。", 30]],
   "森 早苗": [["consumer-kobayashi", 4, "新玉ねぎが甘くて驚きました。発送も丁寧。", 8]],
@@ -301,6 +335,7 @@ export const run = mutation({
       for (const r of rows) await ctx.db.delete(r._id);
     }
     for (const u of USERS) await ctx.db.insert("users", u);
+    const assets = new Map((await ctx.db.query("assets").collect()).map((a) => [a.key, a.storageId]));
 
     const farmerIds: Record<string, Id<"farmers">> = {};
     const productIds: Record<string, Id<"products">> = {};
@@ -314,7 +349,9 @@ export const run = mutation({
         name: f.name,
         kana: f.kana,
         farmName: f.farmName,
+        avatarStorageId: f.avatarAsset ? assets.get(f.avatarAsset) : undefined,
         avatarUrl: face(f.face),
+        farmStorageIds: f.farmAssets?.map((k) => assets.get(k)).filter((x): x is NonNullable<typeof x> => !!x),
         farmUrls: f.farms.map((s) => photo(s)),
         catchphrase: f.catchphrase,
         bio: f.bio,
@@ -339,6 +376,7 @@ export const run = mutation({
         productIds[p.name] = await ctx.db.insert("products", {
           farmerId,
           name: p.name,
+          imageStorageId: p.imageAsset ? assets.get(p.imageAsset) : undefined,
           imageUrl: photo(p.img, 800, 800),
           description: p.description,
           price: p.price,
@@ -405,14 +443,16 @@ export const run = mutation({
     await mk("demo-consumer", "藤井 翔", "completed", "pickup", [["八尾の若ごぼう", 2]], slotAt([3, 6], 10, -1), 5, { consumerReviewed: true, farmerReviewed: true, paid: "cash" });
     await mk("demo-consumer", "吉田 修", "completed", "delivery", [["樫田のお米 白米", 1]], undefined, 20, { address: "大阪市北区中之島1-1-1", consumerReviewed: true, trackingNumber: "4123-4567-8901" });
     const toReview = await mk("demo-consumer", "大西 隆", "completed", "pickup", [["銀寄 生栗", 1]], slotAt([0, 6], 11, -1), 4);
-    // 藤井農園（生産者デモ）への予約
-    await mk("consumer-sasaki", "藤井 翔", "requested", "pickup", [["八尾の若ごぼう", 1], ["若ごぼう佃煮", 2]], slotAt([3, 6], 9), 0, { note: "初めて伺います。", paid: false });
-    await mk("consumer-kobayashi", "藤井 翔", "confirmed", "delivery", [["若ごぼう佃煮", 3]], undefined, 1, { address: "京都市左京区吉田本町" });
-    const done = await mk("consumer-sasaki", "藤井 翔", "completed", "pickup", [["春野菜セット", 1]], slotAt([3, 6], 10, -1, 1), 8, { consumerReviewed: true });
+    // ひろせファーム（生産者デモ）への予約
+    await mk("consumer-sasaki", "廣瀬 裕", "requested", "pickup", [["丸おくら", 2], ["ジャンボピーマン", 1]], slotAt([6, 0], 10), 0, { note: "初めて伺います。", paid: false });
+    await mk("consumer-kobayashi", "廣瀬 裕", "confirmed", "delivery", [["つるむらさき", 2], ["モロヘイヤ", 1]], undefined, 1, { address: "堺市南区竹城台1-1" });
+    const done = await mk("consumer-sasaki", "廣瀬 裕", "completed", "pickup", [["丸おくら", 3]], slotAt([6, 0], 10, -1, 1), 8, { consumerReviewed: true });
+    await mk("demo-consumer", "廣瀬 裕", "completed", "delivery", [["ジャンボピーマン", 2]], undefined, 10, { address: "大阪市北区中之島1-1-1", consumerReviewed: true, trackingNumber: "4123-0000-5678" });
     await ctx.db.insert("watches", { userId: "demo-consumer", productId: productIds["いちじく（初もの）"], farmerId: farmerIds["岡田 学"], createdAt: now - 2 * DAY });
-    await ctx.db.insert("watches", { userId: "consumer-sasaki", productId: productIds["若ごぼう（来季）"], farmerId: farmerIds["藤井 翔"], createdAt: now - DAY });
+    await ctx.db.insert("watches", { userId: "consumer-sasaki", productId: productIds["さつまいも（芋ほり大会）"], farmerId: farmerIds["廣瀬 裕"], createdAt: now - DAY });
+    await ctx.db.insert("watches", { userId: "consumer-kobayashi", productId: productIds["白菜"], farmerId: farmerIds["廣瀬 裕"], createdAt: now - DAY });
     await ctx.db.insert("watches", { userId: "consumer-kobayashi", productId: productIds["若ごぼう（来季）"], farmerId: farmerIds["藤井 翔"], createdAt: now - DAY });
-    await ctx.db.insert("consumerRatings", { userId: "demo-consumer", farmerId: farmerIds["藤井 翔"], reservationId: toReview, rating: 5, comment: "時間どおり。", createdAt: now - 3 * DAY });
+    await ctx.db.insert("consumerRatings", { userId: "demo-consumer", farmerId: farmerIds["廣瀬 裕"], reservationId: toReview, rating: 5, comment: "時間どおり。", createdAt: now - 3 * DAY });
     await ctx.db.insert("consumerRatings", { userId: "consumer-sasaki", farmerId: farmerIds["岡田 学"], reservationId: done, rating: 4, createdAt: now - 7 * DAY });
 
     return { farmers: FARMERS.length };
