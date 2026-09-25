@@ -10,6 +10,7 @@ export function FarmerAvatar({
   selected = false,
   pr = false,
   borderWidth = 3,
+  onLoad,
 }: {
   uri: string;
   size: number;
@@ -17,6 +18,7 @@ export function FarmerAvatar({
   selected?: boolean;
   pr?: boolean;
   borderWidth?: number;
+  onLoad?: () => void;
 }) {
   const inner = size - borderWidth * 2;
   return (
@@ -49,7 +51,7 @@ export function FarmerAvatar({
         }}
       >
         <View style={{ width: inner, height: inner, borderRadius: inner / 2, overflow: "hidden" }}>
-          <Image source={{ uri }} style={{ width: inner, height: inner }} contentFit="cover" transition={250} cachePolicy="memory-disk" />
+          <Image source={{ uri }} style={{ width: inner, height: inner }} contentFit="cover" transition={0} cachePolicy="memory-disk" onLoad={onLoad} />
         </View>
       </View>
     </View>
