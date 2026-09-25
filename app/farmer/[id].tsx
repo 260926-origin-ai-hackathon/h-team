@@ -102,7 +102,7 @@ export default function FarmerDetailScreen() {
                 }}
               >
                 <View style={{ width: 44, height: (44 * 88) / 63, borderRadius: 6, overflow: "hidden", backgroundColor: owned ? farmer.tint : colors.lockedBg }}>
-                  <Image source={{ uri: farmer.avatar }} style={{ width: "100%", height: "100%" }} contentFit="cover" blurRadius={owned ? 0 : 10} />
+                  <Image source={{ uri: farmer.avatar }} style={{ width: "100%", height: "100%" }} contentFit="cover" blurRadius={owned ? 0 : 18} />
                 </View>
                 <View style={{ flex: 1, gap: 3 }}>
                   <Txt w={700} size={13}>

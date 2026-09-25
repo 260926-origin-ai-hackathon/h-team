@@ -59,13 +59,13 @@ export function FarmerAvatar({
             style={{ width: inner, height: inner }}
             contentFit="cover"
             transition={250}
-            blurRadius={owned ? 0 : Math.max(4, Math.round(inner / 7))}
+            blurRadius={owned ? 0 : Math.max(10, Math.round(inner / 3))}
             cachePolicy="memory-disk"
           />
           {!owned && (
             <View
               pointerEvents="none"
-              style={{ position: "absolute", inset: 0, backgroundColor: "rgba(239,239,235,0.6)" }}
+              style={{ position: "absolute", inset: 0, backgroundColor: "rgba(239,239,235,0.68)" }}
             />
           )}
         </View>

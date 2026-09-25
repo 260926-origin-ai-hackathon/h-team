@@ -16,7 +16,7 @@ const SHIPPING_PER_FARM = 880;
 
 export default function CartScreen() {
   const insets = useSafeAreaInsets();
-  const { cart, setQuantity, clearCart, enqueueReveal, showToast } = useStore();
+  const { cart, setQuantity, clearCart, enqueueReveal, showToast, selectFarmer } = useStore();
   const products = useQuery(api.products.byIds, { ids: cart.map((c) => c.productId) }) ?? [];
   const farmers = useQuery(api.farmers.list) ?? [];
   const collections = useQuery(api.collections.mine, { userId: DEMO_USER_ID }) ?? [];
@@ -40,6 +40,7 @@ export default function CartScreen() {
         items: lines.map((l) => ({ productId: l.productId, quantity: l.quantity })),
       });
       clearCart();
+      selectFarmer(null);
       enqueueReveal(res.cards);
       router.navigate("/");
     } catch (e) {

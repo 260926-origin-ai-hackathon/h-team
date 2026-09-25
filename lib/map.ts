@@ -5,10 +5,19 @@ import type { FilterKind } from "./store";
 export const MAPBOX_TOKEN = process.env.EXPO_PUBLIC_MAPBOX_TOKEN ?? "";
 export const hasMapboxToken = MAPBOX_TOKEN.startsWith("pk.");
 
-if (hasMapboxToken) {
-  Mapbox.setAccessToken(MAPBOX_TOKEN);
-  Mapbox.setTelemetryEnabled(false);
-}
+// Mapbox needs *some* token to initialise; without a real one we still render
+// the map view with an offline blank style so farmer markers keep working.
+Mapbox.setAccessToken(hasMapboxToken ? MAPBOX_TOKEN : "pk.offline-placeholder");
+Mapbox.setTelemetryEnabled(false);
+Mapbox.Logger.setLogLevel("warning");
+
+/** Tile-less style used when no valid token is configured (or tiles fail to load). */
+export const OFFLINE_STYLE_JSON = JSON.stringify({
+  version: 8,
+  name: "offline",
+  sources: {},
+  layers: [{ id: "bg", type: "background", paint: { "background-color": "#EFEFEC" } }],
+});
 
 /** Osaka — the demo's default viewport (matches the design: [34.66, 135.47] z10). */
 export const DEFAULT_CENTER: [number, number] = [135.47, 34.66];

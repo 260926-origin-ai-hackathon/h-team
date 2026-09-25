@@ -12,7 +12,7 @@ import { TAB_BAR_HEIGHT, TabBar } from "../components/TabBar";
 import { Txt } from "../components/ui";
 import { api } from "../convex/_generated/api";
 import { DEMO_USER_ID } from "../lib/convex";
-import { DEFAULT_CENTER, DEFAULT_ZOOM, FOCUS_ZOOM, hasMapboxToken, matchesFilter, toPosition } from "../lib/map";
+import { DEFAULT_CENTER, DEFAULT_ZOOM, FOCUS_ZOOM, OFFLINE_STYLE_JSON, hasMapboxToken, matchesFilter, toPosition } from "../lib/map";
 import { useStore, type FilterKind } from "../lib/store";
 import { colors, shadow } from "../lib/theme";
 import type { Farmer, FarmerId } from "../lib/types";
@@ -25,6 +25,8 @@ export default function MapScreen() {
   const camera = useRef<Mapbox.Camera>(null);
   const [locating, setLocating] = useState(false);
   const [showUser, setShowUser] = useState(false);
+  // Falls back to a blank offline style when there is no token or tiles fail (401 etc.).
+  const [offline, setOffline] = useState(!hasMapboxToken);
 
   const countOf = useMemo(() => {
     const m = new Map<FarmerId, number>();
@@ -71,10 +73,11 @@ export default function MapScreen() {
 
   return (
     <View style={{ flex: 1, backgroundColor: colors.mapBg }}>
-      {hasMapboxToken ? (
-        <Mapbox.MapView
+      <Mapbox.MapView
           style={{ flex: 1 }}
-          styleURL={Mapbox.StyleURL.Light}
+          styleURL={offline ? undefined : Mapbox.StyleURL.Light}
+          styleJSON={offline ? OFFLINE_STYLE_JSON : undefined}
+          onMapLoadingError={() => setOffline(true)}
           scaleBarEnabled={false}
           logoPosition={{ bottom: TAB_BAR_HEIGHT + 8, left: 8 }}
           attributionPosition={{ bottom: TAB_BAR_HEIGHT + 8, right: 8 }}
@@ -95,12 +98,12 @@ export default function MapScreen() {
             />
           ))}
         </Mapbox.MapView>
-      ) : (
-        <View style={{ flex: 1, alignItems: "center", justifyContent: "center", padding: 32, gap: 10 }}>
-          <Txt w={700} size={16}>Mapbox トークンが未設定です</Txt>
-          <Txt size={12} color={colors.inkSoft} style={{ textAlign: "center", lineHeight: 20 }}>
-            .env.local に EXPO_PUBLIC_MAPBOX_TOKEN (pk.…) を設定してください。図鑑・カートは動作します。
-          </Txt>
+
+      {offline && (
+        <View pointerEvents="none" style={{ position: "absolute", left: 0, right: 0, top: insets.top + 112, alignItems: "center" }}>
+          <View style={{ backgroundColor: "rgba(255,255,255,0.9)", borderRadius: 999, paddingHorizontal: 12, paddingVertical: 6 }}>
+            <Txt size={11} color={colors.muted}>地図タイル未取得 · EXPO_PUBLIC_MAPBOX_TOKEN を設定すると表示されます</Txt>
+          </View>
         </View>
       )}
 

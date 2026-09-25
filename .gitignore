@@ -42,3 +42,4 @@ yarn-error.*
 
 # convex
 .env.local
+e2e/shots/

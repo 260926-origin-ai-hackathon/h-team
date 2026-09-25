@@ -20,7 +20,7 @@ export default function ProductDetailScreen() {
   const product = useQuery(api.products.get, { id: id as Id<"products"> });
   const collections = useQuery(api.collections.mine, { userId: DEMO_USER_ID }) ?? [];
   const createOrder = useMutation(api.orders.create);
-  const { addToCart, showToast, enqueueReveal } = useStore();
+  const { addToCart, showToast, enqueueReveal, selectFarmer } = useStore();
   const [qty, setQty] = useState(1);
   const [busy, setBusy] = useState(false);
 
@@ -50,6 +50,7 @@ export default function ProductDetailScreen() {
     setBusy(true);
     try {
       const res = await createOrder({ userId: DEMO_USER_ID, items: [{ productId: product._id, quantity: qty }] });
+      selectFarmer(null);
       enqueueReveal(res.cards);
       router.navigate("/");
     } catch (e) {

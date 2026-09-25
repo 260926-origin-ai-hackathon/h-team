@@ -1,0 +1,97 @@
+appId: dev.farmercards.app
+---
+- stopApp
+- openLink: "farmercards://expo-development-client/?url=http%3A%2F%2Flocalhost%3A8081"
+- extendedWaitUntil:
+    visible: ".*はたけカード.*"
+    timeout: 90000
+- waitForAnimationToEnd
+- takeScreenshot: shots/01-map
+
+# marker → sheet
+- tapOn: ".*若ごぼう.*"
+- extendedWaitUntil:
+    visible: ".*プロフィールを見る.*"
+    timeout: 10000
+- waitForAnimationToEnd
+- takeScreenshot: shots/02-sheet
+- assertVisible: ".*藤井 翔.*"
+- assertVisible: ".*未解放.*"
+
+# farmer detail
+- tapOn: ".*プロフィールを見る.*"
+- extendedWaitUntil:
+    visible: ".*01 · 人.*"
+    timeout: 10000
+- waitForAnimationToEnd
+- takeScreenshot: shots/03-farmer
+- scrollUntilVisible:
+    element: ".*03 · 商品.*"
+    direction: DOWN
+- waitForAnimationToEnd
+- takeScreenshot: shots/04-farmer-products
+
+# product detail
+- tapOn:
+    text: ".*八尾の若ごぼう.*"
+    index: 0
+- extendedWaitUntil:
+    visible: ".*カートに入れる.*"
+    timeout: 10000
+- waitForAnimationToEnd
+- takeScreenshot: shots/05-product
+- tapOn: ".*カートに入れる.*"
+- assertVisible: ".*カートに追加しました.*"
+- takeScreenshot: shots/06-toast
+
+# back to farmer page, then the cart pill in its header
+- tapOn: "戻る"
+- extendedWaitUntil:
+    visible: ".*03 · 商品.*"
+    timeout: 10000
+- scrollUntilVisible:
+    element: "カート, 1"
+    direction: UP
+- tapOn: "カート, 1"
+- extendedWaitUntil:
+    visible: ".*購入してカードを受け取る.*"
+    timeout: 10000
+- waitForAnimationToEnd
+- takeScreenshot: shots/07-cart
+- assertVisible: ".*はじめてのカード.*"
+- tapOn: ".*購入してカードを受け取る.*"
+
+# reveal
+- extendedWaitUntil:
+    visible: ".*新しいカードを手に入れました.*"
+    timeout: 15000
+- waitForAnimationToEnd
+- takeScreenshot: shots/08-reveal
+- tapOn:
+    text: ".*閉じる.*"
+    index: 0
+- waitForAnimationToEnd
+- takeScreenshot: shots/09-map-unlocked
+
+# collection
+- extendedWaitUntil:
+    visible: "図鑑"
+    timeout: 15000
+- tapOn: "図鑑"
+- extendedWaitUntil:
+    visible: ".*生産者図鑑.*"
+    timeout: 10000
+- waitForAnimationToEnd
+- takeScreenshot: shots/10-collection
+- scrollUntilVisible:
+    element: ".*藤井 翔.*"
+    direction: DOWN
+    centerElement: true
+- tapOn:
+    text: ".*藤井 翔.*"
+    index: 0
+- extendedWaitUntil:
+    visible: ".*また買う.*"
+    timeout: 10000
+- waitForAnimationToEnd
+- takeScreenshot: shots/11-card

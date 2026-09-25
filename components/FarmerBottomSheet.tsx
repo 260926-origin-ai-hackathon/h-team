@@ -44,6 +44,8 @@ export function FarmerBottomSheet({ farmer, count }: { farmer: Farmer | null; co
       enablePanDownToClose
       onClose={() => selectFarmer(null)}
       handleComponent={null}
+      accessible={false}
+      accessibilityLabel={null}
       style={{ marginHorizontal: 10 }}
       backgroundStyle={{ borderRadius: 24, backgroundColor: colors.white }}
     >

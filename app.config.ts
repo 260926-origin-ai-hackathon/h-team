@@ -42,11 +42,6 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
           "近くの農家を地図で見つけるために位置情報を使用します。",
       },
     ],
-    [
-      "@rnmapbox/maps",
-      {
-        RNMapboxMapsDownloadToken: process.env.MAPBOX_DOWNLOAD_TOKEN ?? "",
-      },
-    ],
+    "@rnmapbox/maps",
   ],
 });

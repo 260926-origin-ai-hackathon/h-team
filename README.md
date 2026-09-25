@@ -50,3 +50,15 @@ lib/                theme（デザイントークン）, store（Zustand: cart /
 - ユーザーは固定の `DEMO_USER_ID`（`lib/convex.ts`）。
 - 画像はシードでは外部プレースホルダ URL。実写真は Convex File Storage に上げて
   `avatarStorageId` / `farmStorageIds` / `imageStorageId` に入れると優先されます。
+
+## E2E（Maestro）
+
+シミュレータに dev build を入れ、Metro と Convex を起動した状態で:
+
+```bash
+npm run seed                 # DB をリセット
+npm run e2e                  # e2e/farmer-flow.yaml: 地図 → ピン → シート → 生産者 → 商品 → カート → 購入 → カード獲得 → 図鑑 → カード詳細
+```
+
+スクリーンショットは `e2e/shots/` に出力されます（確認用の縮小版は `docs/e2e/`）。
+Mapbox トークン未設定でもオフラインの空スタイルでピンは動作します（タイルは表示されません）。

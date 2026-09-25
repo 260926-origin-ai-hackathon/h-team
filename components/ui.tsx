@@ -133,8 +133,10 @@ export function IconButton({
   color = colors.ink,
   iconSize = 18,
   flat = false,
+  label,
 }: {
   name: ComponentProps<typeof Ionicons>["name"];
+  label?: string;
   onPress: () => void;
   size?: number;
   bg?: string;
@@ -146,6 +148,8 @@ export function IconButton({
     <Pressable
       onPress={onPress}
       hitSlop={8}
+      accessibilityRole="button"
+      accessibilityLabel={label ?? (name === "chevron-back" ? "戻る" : name === "close" ? "閉じる" : undefined)}
       style={({ pressed }) => [
         {
           width: size,

@@ -44,6 +44,9 @@ export function TabBar({ active }: { active: Tab }) {
             onPress={() => {
               if (!on) router.navigate(t.href);
             }}
+            accessibilityRole="tab"
+            accessibilityLabel={t.label}
+            accessibilityState={{ selected: on }}
             style={{ flex: 1, alignItems: "center", gap: 6, paddingTop: 6 }}
           >
             <View>
