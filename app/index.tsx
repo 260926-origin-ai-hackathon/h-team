@@ -31,7 +31,7 @@ export default function RoleSelectScreen() {
     <View style={{ flex: 1, backgroundColor: colors.bg, paddingTop: insets.top + 32, paddingHorizontal: 22, paddingBottom: insets.bottom + 24, gap: 18 }}>
       <View style={{ gap: 6 }}>
         <SectionLabel>HATAKE MAP · OSAKA</SectionLabel>
-        <Pressable onLongPress={() => setShowAdmin(true)} delayLongPress={1500} accessibilityLabel="はたけマップ">
+        <Pressable onLongPress={() => setShowAdmin(true)} delayLongPress={1500} accessibilityLabel="はたけマップ" testID="role-title">
           <Txt w={700} size={28}>はたけマップ</Txt>
         </Pressable>
         <Txt size={13} color={colors.inkSoft} style={{ lineHeight: 21 }}>

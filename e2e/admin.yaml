@@ -56,9 +56,17 @@ appId: jp.hatakemap.app
 - waitForAnimationToEnd
 - takeScreenshot: shots/a02-pending
 
-# 運営で承認
+# 運営で承認（トーストが消えてから切り替え → タイトル長押しで運営導線を表示）
+- extendedWaitUntil:
+    notVisible: ".*申請しました.*"
+    timeout: 10000
 - tapOn: "ロールを切り替え"
-- longPressOn: "はたけマップ"
+- extendedWaitUntil:
+    visible: "消費者として使う"
+    timeout: 10000
+- longPressOn:
+    text: "はたけマップ"
+    index: 1
 - extendedWaitUntil:
     visible: "運営として承認する"
     timeout: 10000
