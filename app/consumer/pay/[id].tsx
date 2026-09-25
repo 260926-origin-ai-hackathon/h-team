@@ -38,7 +38,7 @@ export default function PayScreen() {
 
   return (
     <View style={{ flex: 1, backgroundColor: colors.bg }}>
-      <ScrollView contentContainerStyle={{ paddingTop: 18, paddingHorizontal: 18, paddingBottom: insets.bottom + 30, gap: 14 }} keyboardShouldPersistTaps="handled">
+      <ScrollView keyboardDismissMode="on-drag" contentContainerStyle={{ paddingTop: 18, paddingHorizontal: 18, paddingBottom: insets.bottom + 30, gap: 14 }} keyboardShouldPersistTaps="handled">
         <View style={{ flexDirection: "row", alignItems: "center", gap: 12 }}>
           <IconButton name="close" iconSize={16} onPress={() => router.back()} />
           <Txt w={700} size={20}>お支払い</Txt>

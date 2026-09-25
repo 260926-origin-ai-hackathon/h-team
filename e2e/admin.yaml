@@ -47,14 +47,6 @@ appId: dev.farmercards.app
 - inputText: "Sakai Minami, Arai Farm gate"
 - pressKey: Enter
 - scrollUntilVisible:
-    element: "受取可能な曜日・時間"
-    direction: DOWN
-    centerElement: true
-- tapOn:
-    id: "field-受取可能な曜日・時間"
-- inputText: "Sat 9:00-12:00"
-- pressKey: Enter
-- scrollUntilVisible:
     element: ".*登録して承認を申請.*"
     direction: DOWN
 - tapOn: ".*登録して承認を申請.*"

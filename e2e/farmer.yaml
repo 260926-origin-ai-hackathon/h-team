@@ -12,12 +12,21 @@ appId: dev.farmercards.app
 - waitForAnimationToEnd
 - takeScreenshot: shots/f01-home
 
-# PR トグル
+# PR トグル＋文言
 - tapOn: "優先表示（PR）"
 - assertVisible: ".*優先表示をオンにしました.*"
-- takeScreenshot: shots/f02-pr-on
+- tapOn:
+    id: "field-PR 文言（生産者ページとシートに表示・地図ピンには出ません）"
+- inputText: "Fresh gobo this weekend, parking available."
+- hideKeyboard
+- scrollUntilVisible:
+    element: ".*PR 文言を保存.*"
+    direction: DOWN
+- tapOn: ".*PR 文言を保存.*"
+- assertVisible: ".*PR 文言を保存しました.*"
+- takeScreenshot: shots/f02-pr
 
-# 予約リクエストを確定
+# 予約リクエストを確定 → 現地払いで完了 → 評価
 - tapOn: "予約"
 - extendedWaitUntil:
     visible: ".*予約管理.*"
@@ -33,10 +42,10 @@ appId: dev.farmercards.app
 - takeScreenshot: shots/f04-request-detail
 - tapOn: ".*予約を確定する.*"
 - extendedWaitUntil:
-    visible: ".*受け渡し完了にする.*"
+    visible: ".*現地払いで受け渡し完了.*"
     timeout: 10000
-- takeScreenshot: shots/f05-confirmed
-- tapOn: ".*受け渡し完了にする.*"
+- takeScreenshot: shots/f05-confirmed-unpaid
+- tapOn: ".*現地払いで受け渡し完了.*"
 - extendedWaitUntil:
     visible: ".*お客さまを評価する.*"
     timeout: 10000
@@ -47,51 +56,79 @@ appId: dev.farmercards.app
     timeout: 10000
 - takeScreenshot: shots/f06-completed-rated
 
-# 商品追加
+# 発送: 支払い済みの発送予約に追跡番号を入れて発送済み
+- tapOn: "戻る"
+- tapOn: "確定"
+- tapOn:
+    text: "予約 小林 美月 発送準備中"
+    index: 0
+- extendedWaitUntil:
+    visible: ".*発送済みにする.*"
+    timeout: 10000
+- tapOn:
+    id: "field-追跡番号（任意）"
+- inputText: "412345678901"
+- pressKey: Enter
+- takeScreenshot: shots/f07-ship
+- tapOn: ".*発送済みにする.*"
+- extendedWaitUntil:
+    visible: ".*追跡番号.*"
+    timeout: 10000
+- takeScreenshot: shots/f08-shipped
+
+# 商品追加（出荷予定）
 - tapOn: "戻る"
 - tapOn: "商品"
 - extendedWaitUntil:
     visible: ".*商品を追加.*"
     timeout: 10000
-- takeScreenshot: shots/f07-products
+- takeScreenshot: shots/f09-products
 - tapOn: ".*商品を追加.*"
 - extendedWaitUntil:
     visible: "商品名"
     timeout: 10000
 - tapOn:
     id: "field-商品名"
-- inputText: "Wakagobo Furikake"
+- inputText: "Gobo Chips"
+- pressKey: Enter
 - tapOn:
     id: "field-価格（円・税込）"
-- inputText: "600"
+- inputText: "500"
+- pressKey: Enter
 - tapOn:
     id: "field-単位"
-- inputText: "50g"
+- inputText: "60g"
 - pressKey: Enter
 - scrollUntilVisible:
-    element: "発送代行に対応"
+    element: "出荷予定として掲載"
     direction: DOWN
-- tapOn: "発送代行に対応"
-- takeScreenshot: shots/f08-product-form
+- tapOn: "出荷予定として掲載"
+- takeScreenshot: shots/f10-product-upcoming
 - scrollUntilVisible:
     element: "この内容で追加"
     direction: DOWN
 - tapOn: "この内容で追加"
 - extendedWaitUntil:
-    visible: ".*Wakagobo Furikake.*"
+    visible: ".*Gobo Chips.*"
     timeout: 10000
-- takeScreenshot: shots/f09-products-added
+- takeScreenshot: shots/f11-products-added
 
-# レビュー / プロフィール
+# レビュー / 農園設定（時間帯・SNS）
 - tapOn: "レビュー"
 - extendedWaitUntil:
     visible: ".*件.*"
     timeout: 10000
 - waitForAnimationToEnd
-- takeScreenshot: shots/f10-reviews
-- tapOn: "プロフィール"
+- takeScreenshot: shots/f12-reviews
+- tapOn: "農園設定"
 - extendedWaitUntil:
     visible: ".*01 · 人.*"
     timeout: 10000
-- waitForAnimationToEnd
-- takeScreenshot: shots/f11-profile
+- scrollUntilVisible:
+    element: ".*受取可能な曜日・時間帯.*"
+    direction: DOWN
+- takeScreenshot: shots/f13-profile-slots
+- scrollUntilVisible:
+    element: ".*04 · SNS.*"
+    direction: DOWN
+- takeScreenshot: shots/f14-profile-sns

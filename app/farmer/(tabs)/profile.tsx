@@ -126,7 +126,7 @@ export default function FarmerProfileScreen() {
 
   return (
     <View style={{ flex: 1, backgroundColor: colors.bg }}>
-      <ScrollView contentContainerStyle={{ paddingTop: insets.top + 14, paddingHorizontal: 18, paddingBottom: 40, gap: 14 }} keyboardShouldPersistTaps="handled">
+      <ScrollView keyboardDismissMode="on-drag" contentContainerStyle={{ paddingTop: insets.top + 14, paddingHorizontal: 18, paddingBottom: 40, gap: 14 }} keyboardShouldPersistTaps="handled">
         <ScreenTitle label="PROFILE" title={farmer ? "プロフィール" : "生産者登録"} right={farmer ? <Pill {...STATUS[farmer.status]} weight={700} /> : undefined} />
         {!farmer && <Txt size={12} color={colors.inkSoft} style={{ lineHeight: 19 }}>消費者に見せたい「人」の情報を書いてください。登録後、運営の承認を経て地図に掲載されます。</Txt>}
 

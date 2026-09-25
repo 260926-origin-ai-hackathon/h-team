@@ -47,7 +47,7 @@ export default function FarmerHomeScreen() {
   if (farmer === null) {
     return (
       <View style={{ flex: 1, backgroundColor: colors.bg }}>
-        <ScrollView contentContainerStyle={{ paddingTop: insets.top + 14, paddingHorizontal: 18, paddingBottom: 40, gap: 16 }}>
+        <ScrollView keyboardDismissMode="on-drag" contentContainerStyle={{ paddingTop: insets.top + 14, paddingHorizontal: 18, paddingBottom: 40, gap: 16 }}>
           {header}
           <Card style={{ padding: 20, gap: 12, alignItems: "center" }}>
             <Ionicons name="leaf-outline" size={28} color={colors.green} />
@@ -65,7 +65,7 @@ export default function FarmerHomeScreen() {
   const st = STATUS[farmer.status];
   return (
     <View style={{ flex: 1, backgroundColor: colors.bg }}>
-      <ScrollView contentContainerStyle={{ paddingTop: insets.top + 14, paddingHorizontal: 18, paddingBottom: 40, gap: 16 }}>
+      <ScrollView keyboardDismissMode="on-drag" contentContainerStyle={{ paddingTop: insets.top + 14, paddingHorizontal: 18, paddingBottom: 40, gap: 16 }}>
         {header}
         <Card style={{ padding: 14, flexDirection: "row", alignItems: "center", gap: 12 }}>
           <FarmerAvatar uri={farmer.avatar} size={48} tint={farmer.tint} borderWidth={2} />
