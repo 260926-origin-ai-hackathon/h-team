@@ -171,12 +171,12 @@ docs/e2e/                   参照スクリーンショット
    npx convex deploy                       # 本番デプロイ。URL が表示される
    npx convex run seed:run --prod          # デモデータ投入
    ```
-2. **EAS にログインしてプロジェクトを紐づけ**（`app.config.ts` の `extra.eas.projectId` / `owner` が書き込まれます）
+2. **EAS にログインしてプロジェクトを紐づけ**（設定済み: `@rinia/hatake-map`。別アカウントで配る場合は `app.config.ts` の `owner` / `extra.eas.projectId` を書き換える）
    ```bash
    npx eas-cli login
    npx eas-cli init
    ```
-3. **ビルド時の環境変数**（バンドルに埋め込まれるため EAS 側に登録。`.env.local` は使われません）
+3. **ビルド時の環境変数**（バンドルに埋め込まれるため EAS 側に登録。`.env.local` は使われません。production 環境に登録済み、確認は `npx eas-cli env:list --environment production`）
    ```bash
    npx eas-cli env:create --environment production --scope project --visibility plaintext \
      --name EXPO_PUBLIC_CONVEX_URL --value https://<deployment>.convex.cloud

@@ -33,8 +33,8 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     permissions: ["ACCESS_COARSE_LOCATION", "ACCESS_FINE_LOCATION"],
   },
   web: { favicon: "./assets/favicon.png" },
-  // `eas init` が extra.eas.projectId と owner を書き込みます（未ログインのため未設定）。
-  extra: { eas: {} },
+  owner: "rinia",
+  extra: { eas: { projectId: "d97b0733-9bd2-4669-85c6-3955891e724c" } },
   plugins: [
     "expo-router",
     "expo-image",
