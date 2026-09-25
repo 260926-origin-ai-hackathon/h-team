@@ -1,0 +1,164 @@
+appId: host.exp.Exponent
+---
+- stopApp
+- openLink: "exp://127.0.0.1:8081"
+- extendedWaitUntil:
+    visible: "消費者として使う"
+    timeout: 90000
+- takeScreenshot: shots/c00-role
+- tapOn: "消費者として使う"
+- extendedWaitUntil:
+    visible: ".*はたけマップ.*"
+    timeout: 30000
+- waitForAnimationToEnd
+- takeScreenshot: shots/c01-map
+
+# 検索 → 絞り込みシート
+- tapOn: "検索"
+- extendedWaitUntil:
+    visible: ".*生産者を探す.*"
+    timeout: 10000
+- waitForAnimationToEnd
+- tapOn: "若ごぼう"
+- waitForAnimationToEnd
+- extendedWaitUntil:
+    visible: ".*件の生産者を表示.*"
+    timeout: 10000
+- takeScreenshot: shots/c02-search
+- tapOn: ".*件の生産者を表示.*"
+- waitForAnimationToEnd
+- assertVisible: "藤井 翔 若ごぼう"
+- takeScreenshot: shots/c03-map-filtered
+
+# marker → sheet（絞り込み中なので藤井さんのピンだけ）
+- tapOn: "藤井 翔 若ごぼう"
+- extendedWaitUntil:
+    visible: ".*生産者を見る.*"
+    timeout: 10000
+- waitForAnimationToEnd
+- takeScreenshot: shots/c04-sheet
+- tapOn: ".*生産者を見る.*"
+- extendedWaitUntil:
+    visible: ".*01 · 人.*"
+    timeout: 10000
+- waitForAnimationToEnd
+- takeScreenshot: shots/c05-farmer-top
+
+# 出荷予定をウォッチ
+- scrollUntilVisible:
+    element: "出荷予定"
+    direction: DOWN
+    centerElement: true
+- waitForAnimationToEnd
+- tapOn: "出荷予定"
+- extendedWaitUntil:
+    visible: ".*ウォッチする.*"
+    timeout: 10000
+- takeScreenshot: shots/c06-upcoming
+- tapOn: ".*ウォッチする.*"
+- extendedWaitUntil:
+    visible: ".*ウォッチ中.*"
+    timeout: 10000
+- tapOn: ".*販売中.*"
+- scrollUntilVisible:
+    element: ".*八尾の若ごぼう.*"
+    direction: DOWN
+- tapOn:
+    text: ".*八尾の若ごぼう.*"
+    index: 0
+- extendedWaitUntil:
+    visible: ".*カゴに入れる.*"
+    timeout: 10000
+- waitForAnimationToEnd
+- takeScreenshot: shots/c07-product
+- tapOn: "カゴに入れる"
+- extendedWaitUntil:
+    visible: "カゴを見る"
+    timeout: 5000
+- takeScreenshot: shots/c08-toast-action
+- tapOn: "戻る"
+- extendedWaitUntil:
+    visible: "カゴを見る"
+    timeout: 10000
+- takeScreenshot: shots/c09-floating-cart
+- tapOn: "カゴを見る"
+
+# 予約カゴ → 受取日時（生産者の時間帯）→ リクエスト
+- extendedWaitUntil:
+    visible: ".*受取方法.*"
+    timeout: 10000
+- waitForAnimationToEnd
+- takeScreenshot: shots/c10-cart
+- tapOn:
+    text: "^(明日|[0-9]+/[0-9]+ (水|土))$"
+    index: 0
+- scrollUntilVisible:
+    element: "9:00"
+    direction: DOWN
+- tapOn: "9:00"
+- scrollUntilVisible:
+    element: ".*予約をリクエスト.*"
+    direction: DOWN
+- takeScreenshot: shots/c11-cart-filled
+- tapOn: ".*予約をリクエスト.*"
+- extendedWaitUntil:
+    visible: ".*予約の詳細.*"
+    timeout: 15000
+- waitForAnimationToEnd
+- assertVisible: ".*リクエスト中.*"
+- takeScreenshot: shots/c12-reservation-requested
+
+# 決済（mock）
+- scrollUntilVisible:
+    element: ".*を支払う.*"
+    direction: DOWN
+- tapOn: ".*を支払う.*"
+- extendedWaitUntil:
+    visible: ".*テスト決済.*"
+    timeout: 10000
+- waitForAnimationToEnd
+- takeScreenshot: shots/c13-pay
+- tapOn: ".*を支払う.*"
+- extendedWaitUntil:
+    visible: ".*支払い済み.*"
+    timeout: 10000
+- takeScreenshot: shots/c14-paid
+
+# 予約一覧（ウォッチ中も）→ レビュー
+- tapOn: "戻る"
+- extendedWaitUntil:
+    visible: ".*進行中.*"
+    timeout: 10000
+- waitForAnimationToEnd
+- takeScreenshot: shots/c15-reservations
+- scrollUntilVisible:
+    element: "予約 大西 隆 受取完了"
+    direction: DOWN
+- tapOn: "予約 大西 隆 受取完了"
+- extendedWaitUntil:
+    visible: ".*レビューを書く.*"
+    timeout: 10000
+- scrollUntilVisible:
+    element: ".*レビューを書く.*"
+    direction: DOWN
+- tapOn: ".*レビューを書く.*"
+- extendedWaitUntil:
+    visible: ".*どうでしたか.*"
+    timeout: 10000
+- tapOn: "5つ星"
+- tapOn:
+    id: "field-コメント"
+- inputText: "Sweet chestnuts, smooth pickup."
+- hideKeyboard
+- takeScreenshot: shots/c16-review-form
+- tapOn: ".*投稿する.*"
+- extendedWaitUntil:
+    visible: ".*レビュー投稿済み.*"
+    timeout: 10000
+- tapOn: "戻る"
+- tapOn: "マイページ"
+- extendedWaitUntil:
+    visible: ".*生産者からの評価.*"
+    timeout: 10000
+- waitForAnimationToEnd
+- takeScreenshot: shots/c17-mypage

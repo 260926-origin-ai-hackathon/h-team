@@ -36,7 +36,7 @@
     "typescript": "~6.0.3"
   },
   "scripts": {
-    "start": "expo start",
+    "start": "expo start --go",
     "android": "expo run:android",
     "ios": "expo run:ios",
     "web": "expo start --web",
@@ -45,7 +45,8 @@
     "typecheck": "tsc --noEmit",
     "lint": "expo lint",
     "e2e": "maestro test e2e/consumer.yaml && maestro test e2e/farmer.yaml && maestro test e2e/admin.yaml",
-    "e2e:release": "maestro test e2e/release/consumer.yaml && maestro test e2e/release/farmer.yaml && maestro test e2e/release/admin.yaml"
+    "e2e:release": "maestro test e2e/release/consumer.yaml && maestro test e2e/release/farmer.yaml && maestro test e2e/release/admin.yaml",
+    "e2e:go": "maestro test e2e/go/consumer.yaml && maestro test e2e/go/farmer.yaml && maestro test e2e/go/admin.yaml"
   },
   "private": true
 }

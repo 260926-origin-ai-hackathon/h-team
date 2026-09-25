@@ -1,7 +1,7 @@
-appId: jp.hatakemap.app
+appId: host.exp.Exponent
 ---
 - stopApp
-- openLink: "hatakemap://expo-development-client/?url=http%3A%2F%2Flocalhost%3A8081"
+- openLink: "exp://127.0.0.1:8081"
 - extendedWaitUntil:
     visible: "生産者として新規登録"
     timeout: 90000
@@ -60,7 +60,9 @@ appId: jp.hatakemap.app
 - extendedWaitUntil:
     notVisible: ".*申請しました.*"
     timeout: 10000
-- tapOn: "ロールを切り替え"
+# Expo Go のフローティングメニューが「切り替え」に重なるため、再起動して起動画面へ（登録はサーバに保存済み）
+- stopApp
+- openLink: "exp://127.0.0.1:8081"
 - extendedWaitUntil:
     visible: "消費者として使う"
     timeout: 10000

@@ -85,6 +85,15 @@
 | E2E | Maestro（消費者 / 生産者 / 運営の 3 フロー） |
 | 配布 | EAS Build / TestFlight |
 
+## いちばん早い動かし方（Expo Go）
+
+```bash
+npm install --legacy-peer-deps
+npx expo start --go        # ターミナルの QR を iPhone の Expo Go（App Store）で読む
+```
+
+`.env.local` の `EXPO_PUBLIC_CONVEX_URL` は本番デプロイ（`https://giant-quail-638.convex.cloud`）を向いています。同じ Wi-Fi にいる端末なら QR だけで動きます。別ネットワークなら `npx expo start --go --tunnel`。
+
 ## セットアップ
 
 ```bash
