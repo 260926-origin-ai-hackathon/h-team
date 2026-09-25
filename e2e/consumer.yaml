@@ -1,7 +1,7 @@
-appId: dev.farmercards.app
+appId: jp.hatakemap.app
 ---
 - stopApp
-- openLink: "farmercards://expo-development-client/?url=http%3A%2F%2Flocalhost%3A8081"
+- openLink: "hatakemap://expo-development-client/?url=http%3A%2F%2Flocalhost%3A8081"
 - extendedWaitUntil:
     visible: "消費者として使う"
     timeout: 90000

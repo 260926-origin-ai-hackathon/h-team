@@ -143,3 +143,35 @@ docs/e2e/                   参照スクリーンショット
 | 生産者 | 藤井 翔（藤井農園） | 承認済み。予約・商品・レビューの管理 |
 | 生産者（新規） | 新規の生産者 | プロフィール登録 → 承認待ち |
 | 運営 | 運営 | 生産者の承認 |
+
+## TestFlight 配布
+
+事前に決めてある値: アプリ名 **はたけマップ** / Bundle ID **jp.hatakemap.app** / scheme `hatakemap`（`app.config.ts`）。
+
+1. **Convex をクラウドへ**（ローカル匿名デプロイは実機から届きません）
+   ```bash
+   npx convex login
+   npx convex deploy                       # 本番デプロイ。URL が表示される
+   npx convex run seed:run --prod          # デモデータ投入
+   ```
+2. **EAS にログインしてプロジェクトを紐づけ**（`app.config.ts` の `extra.eas.projectId` / `owner` が書き込まれます）
+   ```bash
+   npx eas-cli login
+   npx eas-cli init
+   ```
+3. **ビルド時の環境変数**（バンドルに埋め込まれるため EAS 側に登録。`.env.local` は使われません）
+   ```bash
+   npx eas-cli env:create --environment production --scope project --visibility plaintext \
+     --name EXPO_PUBLIC_CONVEX_URL --value https://<deployment>.convex.cloud
+   npx eas-cli env:create --environment production --scope project --visibility sensitive \
+     --name EXPO_PUBLIC_MAPBOX_TOKEN --value pk.xxx
+   ```
+4. **ビルドと提出**（Apple Developer Program のアカウントが必要。初回は対話で証明書・App Store Connect のアプリ作成）
+   ```bash
+   npx eas-cli build --platform ios --profile production
+   npx eas-cli submit --platform ios --latest
+   ```
+   内部テスター（最大 100 名）は審査なしで即配布できます。外部テスターは Beta App Review が必要です。
+5. App Store Connect の「App のプライバシー」で位置情報（アプリ機能のため・ユーザーと紐づけない）を申告。
+
+メモ: `ITSAppUsesNonExemptEncryption: false` 設定済み（輸出コンプライアンスの質問をスキップ）。`eas.json` の production は `autoIncrement` でビルド番号を自動加算。運営（承認）画面は起動画面のタイトルを 1.5 秒長押しで表示します。

@@ -1,7 +1,7 @@
-appId: dev.farmercards.app
+appId: jp.hatakemap.app
 ---
 - stopApp
-- openLink: "farmercards://expo-development-client/?url=http%3A%2F%2Flocalhost%3A8081"
+- openLink: "hatakemap://expo-development-client/?url=http%3A%2F%2Flocalhost%3A8081"
 - extendedWaitUntil:
     visible: "生産者として新規登録"
     timeout: 90000
@@ -58,6 +58,7 @@ appId: dev.farmercards.app
 
 # 運営で承認
 - tapOn: "ロールを切り替え"
+- longPressOn: "はたけマップ"
 - extendedWaitUntil:
     visible: "運営として承認する"
     timeout: 10000

@@ -1,6 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import type { ComponentProps } from "react";
+import { useState } from "react";
 import { Pressable, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { SectionLabel, Txt } from "../components/ui";
@@ -20,6 +21,8 @@ const CHOICES: Choice[] = [
 export default function RoleSelectScreen() {
   const insets = useSafeAreaInsets();
   const setIdentity = useStore((s) => s.setIdentity);
+  // 運営（承認）画面は一般テスターに見せない: タイトル長押しで表示
+  const [showAdmin, setShowAdmin] = useState(false);
   const go = (c: Choice) => {
     setIdentity(c.role, c.userId);
     router.replace(c.href as never);
@@ -28,7 +31,9 @@ export default function RoleSelectScreen() {
     <View style={{ flex: 1, backgroundColor: colors.bg, paddingTop: insets.top + 32, paddingHorizontal: 22, paddingBottom: insets.bottom + 24, gap: 18 }}>
       <View style={{ gap: 6 }}>
         <SectionLabel>HATAKE MAP · OSAKA</SectionLabel>
-        <Txt w={700} size={28}>はたけマップ</Txt>
+        <Pressable onLongPress={() => setShowAdmin(true)} delayLongPress={1500} accessibilityLabel="はたけマップ">
+          <Txt w={700} size={28}>はたけマップ</Txt>
+        </Pressable>
         <Txt size={13} color={colors.inkSoft} style={{ lineHeight: 21 }}>
           地図で生産者を知って、畑に取りに行く。どちらで使いますか？
         </Txt>
@@ -48,16 +53,18 @@ export default function RoleSelectScreen() {
         ))}
       </View>
       <View style={{ flex: 1 }} />
-      <Pressable
-        onPress={() => {
-          setIdentity("admin", DEMO_USERS.admin.userId);
-          router.replace("/admin" as never);
-        }}
-        accessibilityLabel="運営として承認する"
-        style={{ alignSelf: "center", paddingVertical: 10, paddingHorizontal: 16 }}
-      >
-        <Txt w={500} size={12} color={colors.muted}>運営（デモ）: 生産者の承認画面へ</Txt>
-      </Pressable>
+      {showAdmin && (
+        <Pressable
+          onPress={() => {
+            setIdentity("admin", DEMO_USERS.admin.userId);
+            router.replace("/admin" as never);
+          }}
+          accessibilityLabel="運営として承認する"
+          style={{ alignSelf: "center", paddingVertical: 10, paddingHorizontal: 16 }}
+        >
+          <Txt w={500} size={12} color={colors.muted}>運営（デモ）: 生産者の承認画面へ</Txt>
+        </Pressable>
+      )}
     </View>
   );
 }
