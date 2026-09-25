@@ -113,7 +113,7 @@ export default function FarmerProductEditScreen() {
         </Card>
         <Card style={{ paddingHorizontal: 14, paddingVertical: 4 }}>
           <ToggleRow label="本日収穫" hint="地図とシートに「本日収穫」が付きます" value={harvestedToday} onChange={setHarvestedToday} />
-          <ToggleRow label="発送代行に対応" hint="受取だけでなく発送も選べるようにする" value={deliveryAvailable} onChange={setDeliveryAvailable} />
+          <ToggleRow label="発送に対応（ヤマト運輸）" hint="受取だけでなく宅急便での発送も選べるようにする" value={deliveryAvailable} onChange={setDeliveryAvailable} />
           <ToggleRow label="出荷予定として掲載" hint="まだ販売しないが予定日を見せてウォッチを集める" value={upcoming} onChange={setUpcoming} />
           {upcoming ? (
             <View style={{ paddingBottom: 12, gap: 6 }}>
