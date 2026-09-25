@@ -3,12 +3,11 @@ import { router } from "expo-router";
 import { useState } from "react";
 import { Pressable, ScrollView, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { ReservationCard } from "../../components/ReservationCard";
-import { FARMER_TABS, TabBar } from "../../components/TabBar";
-import { ScreenTitle, Txt } from "../../components/ui";
-import { api } from "../../convex/_generated/api";
-import { colors } from "../../lib/theme";
-import { useMyFarmer } from "../../lib/useMyFarmer";
+import { ReservationCard } from "../../../components/ReservationCard";
+import { ScreenTitle, Txt } from "../../../components/ui";
+import { api } from "../../../convex/_generated/api";
+import { colors } from "../../../lib/theme";
+import { useMyFarmer } from "../../../lib/useMyFarmer";
 
 type Tab = "requested" | "confirmed" | "done" | "all";
 const TABS: { k: Tab; label: string }[] = [
@@ -28,7 +27,7 @@ export default function FarmerReservationsScreen() {
 
   return (
     <View style={{ flex: 1, backgroundColor: colors.bg }}>
-      <ScrollView contentContainerStyle={{ paddingTop: insets.top + 14, paddingHorizontal: 18, paddingBottom: 120, gap: 14 }}>
+      <ScrollView contentContainerStyle={{ paddingTop: insets.top + 14, paddingHorizontal: 18, paddingBottom: 40, gap: 14 }}>
         <ScreenTitle label="RESERVATIONS" title="予約管理" />
         <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 6 }}>
           {TABS.map((t) => {
@@ -47,7 +46,6 @@ export default function FarmerReservationsScreen() {
           <ReservationCard key={r._id} reservation={r} perspective="farmer" onPress={() => router.push(`/farmer/reservation/${r._id}`)} />
         ))}
       </ScrollView>
-      <TabBar active="reservations" tabs={FARMER_TABS} />
     </View>
   );
 }

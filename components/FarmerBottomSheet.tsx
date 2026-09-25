@@ -4,7 +4,6 @@ import { useQuery } from "convex/react";
 import { router } from "expo-router";
 import { useEffect, useRef, useState } from "react";
 import { View } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { api } from "../convex/_generated/api";
 import { featuredProducts } from "../lib/farmerView";
 import { useStore } from "../lib/store";
@@ -18,7 +17,6 @@ import { Btn, IconButton, Pill, SectionLabel, Txt } from "./ui";
 /** Detached sheet for the selected farmer: who they are, rating, こだわり, what's buyable now. */
 export function FarmerBottomSheet({ farmer }: { farmer: Farmer | null }) {
   const ref = useRef<BottomSheet>(null);
-  const insets = useSafeAreaInsets();
   const [shown, setShown] = useState<Farmer | null>(farmer);
   if (farmer && farmer !== shown) setShown(farmer);
 
@@ -33,7 +31,7 @@ export function FarmerBottomSheet({ farmer }: { farmer: Farmer | null }) {
   const add = (p: (typeof products)[number]) => {
     if (!shown) return;
     const r = addToCart(shown._id, shown.name, p._id, 1);
-    showToast(r === "replaced" ? `別の生産者の商品を入れ替えました: ${p.name}` : `${p.name} を予約カゴに追加しました`);
+    showToast(r === "replaced" ? `別の生産者の商品を入れ替えました: ${p.name}` : `${p.name} をカゴに追加しました`, { label: "カゴを見る", href: "/consumer/cart" });
   };
 
   return (
@@ -41,7 +39,7 @@ export function FarmerBottomSheet({ farmer }: { farmer: Farmer | null }) {
       ref={ref}
       index={-1}
       detached
-      bottomInset={insets.bottom + 92}
+      bottomInset={10}
       enablePanDownToClose
       onClose={() => selectFarmer(null)}
       handleComponent={null}
@@ -71,6 +69,12 @@ export function FarmerBottomSheet({ farmer }: { farmer: Farmer | null }) {
             </View>
 
             <Txt w={500} size={13} color="#33332F" style={{ lineHeight: 21 }}>{shown.catchphrase}</Txt>
+            {shown.pr && shown.prMessage && (
+              <View style={{ flexDirection: "row", gap: 8, alignItems: "flex-start", padding: 10, borderRadius: 12, backgroundColor: colors.prBg }}>
+                <Pill label="PR" bg={colors.pr} color={colors.white} size={9} weight={700} />
+                <Txt size={12} color={colors.prText} style={{ flex: 1, lineHeight: 18 }}>{shown.prMessage}</Txt>
+              </View>
+            )}
 
             <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 6 }}>
               {shown.kodawari.map((k) => (
@@ -84,7 +88,7 @@ export function FarmerBottomSheet({ farmer }: { farmer: Farmer | null }) {
             <View style={{ flexDirection: "row", alignItems: "center", gap: 8, paddingHorizontal: 12, paddingVertical: 9, borderRadius: 12, backgroundColor: colors.bg, borderWidth: 1, borderColor: colors.lineSoft }}>
               <Ionicons name="location-outline" size={13} color={colors.inkMid} />
               <Txt w={500} size={11} color="#44443F" style={{ flex: 1 }} numberOfLines={1}>
-                受取 {shown.pickupHours}{shown.deliveryAvailable ? " · 発送代行あり" : ""}
+                受取 {shown.pickupHours}{shown.deliveryAvailable ? " · 発送あり" : ""}
               </Txt>
             </View>
 

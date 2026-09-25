@@ -9,7 +9,7 @@ import { Rating } from "../../../components/Stars";
 import { Btn, Card, IconButton, StatusPill, Txt } from "../../../components/ui";
 import { api } from "../../../convex/_generated/api";
 import type { Id } from "../../../convex/_generated/dataModel";
-import { fmtDateTime, methodLabel, statusPill } from "../../../lib/farmerView";
+import { fmtDateTime, methodLabel, paymentPill, statusPill } from "../../../lib/farmerView";
 import { useStore } from "../../../lib/store";
 import { colors, yen } from "../../../lib/theme";
 
@@ -27,6 +27,7 @@ export default function ReservationDetailScreen() {
   if (!r || !r.farmer) return <View style={{ flex: 1, alignItems: "center", justifyContent: "center", backgroundColor: colors.bg }}><Txt color={colors.muted}>予約が見つかりません</Txt></View>;
 
   const st = statusPill(r.status, r.method);
+  const pay = paymentPill(r);
   const stepIdx = r.status === "requested" ? 0 : r.status === "confirmed" ? 1 : r.status === "completed" ? 2 : -1;
   const cancellable = r.status === "requested" || r.status === "confirmed";
 
@@ -90,10 +91,35 @@ export default function ReservationDetailScreen() {
               <Txt size={11} color={colors.muted}>受取可能: {r.farmer.pickupHours}{r.farmer.pickupNote ? ` · ${r.farmer.pickupNote}` : ""}</Txt>
             </>
           ) : (
-            <Txt size={12} color={colors.inkSoft}>発送先: {r.address}</Txt>
+            <>
+              <Txt size={12} color={colors.inkSoft}>発送先: {r.address}</Txt>
+              {r.trackingNumber && <Txt mono size={12} color={colors.inkSoft}>{r.carrier} 追跡番号 {r.trackingNumber}</Txt>}
+            </>
           )}
           {r.note && <Txt size={11.5} color={colors.muted}>メモ: {r.note}</Txt>}
         </Card>
+
+        {pay && (
+          <Card style={{ padding: 14, gap: 10 }}>
+            <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
+              <View style={{ flexDirection: "row", alignItems: "center", gap: 6 }}>
+                <Ionicons name="card-outline" size={14} color={colors.green} />
+                <Txt w={700} size={13}>お支払い</Txt>
+              </View>
+              <StatusPill {...pay} />
+            </View>
+            {r.paymentStatus === "unpaid" ? (
+              <>
+                <Txt size={12} color={colors.inkSoft} style={{ lineHeight: 18 }}>
+                  {r.method === "delivery" ? "お支払い後に生産者が発送します。" : "事前にお支払いいただくと受取がスムーズです（当日の現地払いも可）。"}
+                </Txt>
+                <Btn label={`${yen(r.total)} を支払う`} variant="green" height={46} onPress={() => router.push(`/consumer/pay/${r._id}`)} />
+              </>
+            ) : (
+              <Txt size={12} color={colors.inkSoft}>{r.paymentMethod === "cash" ? "受取時に現地でお支払い済みです。" : `カードでお支払い済み${r.paidAt ? `（${fmtDateTime(r.paidAt)}）` : ""}`}</Txt>
+            )}
+          </Card>
+        )}
 
         <Card style={{ paddingHorizontal: 14, paddingVertical: 6 }}>
           {r.items.map((it, i) => (

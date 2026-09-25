@@ -5,38 +5,38 @@ import { router } from "expo-router";
 import { useMemo, useState } from "react";
 import { Pressable, ScrollView, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { TabBar } from "../../components/TabBar";
-import { Btn, Card, Field, ScreenTitle, Segmented, Stepper, Txt } from "../../components/ui";
-import { api } from "../../convex/_generated/api";
-import { PICKUP_HOURS, pickupDays } from "../../lib/farmerView";
-import { useStore } from "../../lib/store";
-import type { Fulfillment } from "../../lib/types";
-import { colors, yen } from "../../lib/theme";
+import { Btn, Card, Field, ScreenTitle, Segmented, Stepper, Txt } from "../../../components/ui";
+import { api } from "../../../convex/_generated/api";
+import { CARRIER, SHIPPING_FEE, pickupDaysFor } from "../../../lib/farmerView";
+import { useStore } from "../../../lib/store";
+import type { Fulfillment } from "../../../lib/types";
+import { colors, yen } from "../../../lib/theme";
 
-const SHIPPING_FEE = 880;
-
-/** 予約カゴ: 1 生産者分の商品 + 受取方法・日時 → 予約リクエスト。 */
+/** 予約カゴ: 1 生産者分の商品 + 受取方法・日時（生産者の受取時間帯から選択）→ 予約リクエスト → 決済へ。 */
 export default function CartScreen() {
   const insets = useSafeAreaInsets();
   const { userId, cart, setQuantity, clearCart, showToast } = useStore();
   const products = useQuery(api.products.byIds, { ids: cart?.items.map((c) => c.productId) ?? [] }) ?? [];
   const farmer = useQuery(api.farmers.get, cart ? { id: cart.farmerId } : "skip");
+  const me = useQuery(api.users.get, userId ? { userId } : "skip");
   const create = useMutation(api.reservations.create);
 
   const [method, setMethod] = useState<Fulfillment>("pickup");
   const [dayIdx, setDayIdx] = useState(0);
   const [hour, setHour] = useState<number | null>(null);
-  const [address, setAddress] = useState("");
+  const [address, setAddress] = useState<string | null>(null);
   const [note, setNote] = useState("");
   const [busy, setBusy] = useState(false);
-  const days = useMemo(() => pickupDays(7), []);
+  const days = useMemo(() => pickupDaysFor(farmer?.pickupSlots ?? [], 14), [farmer?.pickupSlots]);
+  const day = days[Math.min(dayIdx, Math.max(days.length - 1, 0))];
+  const addr = address ?? me?.address ?? "";
 
   const lines = (cart?.items ?? []).map((c) => ({ ...c, product: products.find((p) => p._id === c.productId) })).filter((l) => l.product);
   const subtotal = lines.reduce((a, l) => a + (l.product?.price ?? 0) * l.quantity, 0);
   const allDeliverable = lines.length > 0 && lines.every((l) => l.product?.deliveryAvailable);
   const shipping = method === "delivery" ? SHIPPING_FEE : 0;
-  const pickupAt = hour === null ? undefined : new Date(days[dayIdx].date.getTime() + hour * 3600 * 1000).getTime();
-  const ready = lines.length > 0 && (method === "pickup" ? hour !== null : address.trim().length > 0);
+  const pickupAt = day && hour !== null ? day.date.getTime() + hour * 3600 * 1000 : undefined;
+  const ready = lines.length > 0 && (method === "pickup" ? pickupAt !== undefined : addr.trim().length > 0);
 
   const submit = async () => {
     if (!cart || busy || !ready) return;
@@ -47,14 +47,13 @@ export default function CartScreen() {
         farmerId: cart.farmerId,
         method,
         pickupAt: method === "pickup" ? pickupAt : undefined,
-        address: method === "delivery" ? address.trim() : undefined,
+        address: method === "delivery" ? addr.trim() : undefined,
         note: note.trim() || undefined,
         items: lines.map((l) => ({ productId: l.productId, quantity: l.quantity })),
       });
       clearCart();
-      showToast("予約をリクエストしました。生産者の確定をお待ちください");
-      // Land on the reservation list with the new reservation on top, so "back" returns to the list.
-      router.dismissAll();
+      setHour(null);
+      showToast("予約をリクエストしました。続けてお支払いへ");
       router.navigate("/consumer/reservations");
       router.push(`/consumer/reservation/${id}`);
     } catch (e) {
@@ -66,7 +65,7 @@ export default function CartScreen() {
 
   return (
     <View style={{ flex: 1, backgroundColor: colors.bg }}>
-      <ScrollView contentContainerStyle={{ paddingTop: insets.top + 14, paddingHorizontal: 18, paddingBottom: 130, gap: 16 }} keyboardShouldPersistTaps="handled">
+      <ScrollView contentContainerStyle={{ paddingTop: insets.top + 14, paddingHorizontal: 18, paddingBottom: 40, gap: 16 }} keyboardShouldPersistTaps="handled">
         <ScreenTitle label="RESERVATION" title="予約カゴ" />
 
         {!cart || lines.length === 0 ? (
@@ -103,7 +102,7 @@ export default function CartScreen() {
                 onChange={setMethod}
                 options={[
                   { value: "pickup", label: "取りに行く" },
-                  { value: "delivery", label: "発送代行", disabled: !allDeliverable },
+                  { value: "delivery", label: `発送（${CARRIER}）`, disabled: !allDeliverable },
                 ]}
               />
               {!allDeliverable && <Txt size={11} color={colors.muted}>受取のみの商品が含まれるため発送は選べません。</Txt>}
@@ -116,40 +115,47 @@ export default function CartScreen() {
                       <Txt size={11} color={colors.muted}>受取可能: {farmer.pickupHours}</Txt>
                     </View>
                   )}
-                  <Txt w={500} size={11} color={colors.muted}>受取日</Txt>
-                  <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 6 }}>
-                    {days.map((d, i) => (
-                      <Chip key={d.label} label={d.label} on={i === dayIdx} onPress={() => setDayIdx(i)} />
-                    ))}
-                  </ScrollView>
-                  <Txt w={500} size={11} color={colors.muted}>時間</Txt>
-                  <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 6 }}>
-                    {PICKUP_HOURS.map((h) => (
-                      <Chip key={h} label={`${h}:00`} on={h === hour} onPress={() => setHour(h)} mono />
-                    ))}
-                  </View>
+                  <Txt w={500} size={11} color={colors.muted}>受取日（生産者が受け付けている日のみ）</Txt>
+                  {days.length === 0 ? (
+                    <Txt size={12} color={colors.fewText}>2 週間以内に受取可能な日がありません。発送を選ぶか、別の生産者をご検討ください。</Txt>
+                  ) : (
+                    <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 6 }}>
+                      {days.map((d, i) => (
+                        <Chip key={d.label} label={d.label} on={i === dayIdx} onPress={() => { setDayIdx(i); setHour(null); }} />
+                      ))}
+                    </ScrollView>
+                  )}
+                  {day && (
+                    <>
+                      <Txt w={500} size={11} color={colors.muted}>時間</Txt>
+                      <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 6 }}>
+                        {day.hours.map((h) => (
+                          <Chip key={h} label={`${h}:00`} on={h === hour} onPress={() => setHour(h)} mono />
+                        ))}
+                      </View>
+                    </>
+                  )}
                 </View>
               ) : (
-                <Field label="発送先住所" value={address} onChangeText={setAddress} placeholder="大阪市北区…" />
+                <Field label="発送先住所" value={addr} onChangeText={setAddress} placeholder="大阪市北区…" hint={me?.address ? "マイページの住所を入れています" : "マイページに登録しておくと自動入力されます"} />
               )}
               <Field label="生産者へのメモ（任意）" value={note} onChangeText={setNote} placeholder="10時ごろ伺います、など" />
             </Card>
 
             <View style={{ gap: 8, paddingHorizontal: 4 }}>
               <Row label="小計" value={yen(subtotal)} />
-              <Row label={method === "delivery" ? "送料（発送代行）" : "送料"} value={method === "delivery" ? yen(shipping) : "¥0（受取）"} />
+              <Row label={method === "delivery" ? `送料（${CARRIER} 宅急便）` : "送料"} value={method === "delivery" ? yen(shipping) : "¥0（受取）"} />
               <View style={{ flexDirection: "row", justifyContent: "space-between", paddingTop: 8, borderTopWidth: 1, borderTopColor: colors.lineSoft }}>
-                <Txt w={700} size={13}>合計（受取時に支払い）</Txt>
+                <Txt w={700} size={13}>合計</Txt>
                 <Txt mono w={500} size={17}>{yen(subtotal + shipping)}</Txt>
               </View>
             </View>
 
             <Btn label={busy ? "送信中…" : "予約をリクエスト"} variant="green" height={52} disabled={busy || !ready} onPress={submit} />
-            <Txt size={11} color={colors.muted} style={{ textAlign: "center", lineHeight: 17 }}>生産者が確定すると予約が成立します。確定後のキャンセルは予約ページから。</Txt>
+            <Txt size={11} color={colors.muted} style={{ textAlign: "center", lineHeight: 17 }}>リクエスト後にお支払い（テスト決済）へ進めます。生産者が確定すると予約成立です。</Txt>
           </>
         )}
       </ScrollView>
-      <TabBar active="cart" />
     </View>
   );
 }

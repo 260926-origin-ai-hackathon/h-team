@@ -1,17 +1,17 @@
 import { Ionicons } from "@expo/vector-icons";
 import { useMutation, useQuery } from "convex/react";
 import { router } from "expo-router";
+import { useState } from "react";
 import { ActivityIndicator, Pressable, ScrollView, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { FarmerAvatar } from "../../components/FarmerAvatar";
-import { ReservationCard } from "../../components/ReservationCard";
-import { Rating } from "../../components/Stars";
-import { FARMER_TABS, TabBar } from "../../components/TabBar";
-import { Btn, Card, Pill, ScreenTitle, SectionLabel, ToggleRow, Txt } from "../../components/ui";
-import { api } from "../../convex/_generated/api";
-import { useStore } from "../../lib/store";
-import { colors } from "../../lib/theme";
-import { useMyFarmer } from "../../lib/useMyFarmer";
+import { FarmerAvatar } from "../../../components/FarmerAvatar";
+import { ReservationCard } from "../../../components/ReservationCard";
+import { Rating } from "../../../components/Stars";
+import { Btn, Card, Field, Pill, ScreenTitle, SectionLabel, ToggleRow, Txt } from "../../../components/ui";
+import { api } from "../../../convex/_generated/api";
+import { useStore } from "../../../lib/store";
+import { colors } from "../../../lib/theme";
+import { useMyFarmer } from "../../../lib/useMyFarmer";
 
 const STATUS = {
   pending: { label: "承認待ち", bg: colors.amberBg, color: colors.amberText, text: "運営が確認中です。承認されると地図に表示されます。" },
@@ -26,6 +26,8 @@ export default function FarmerHomeScreen() {
   const showToast = useStore((s) => s.showToast);
   const reservations = useQuery(api.reservations.listForFarmer, farmer ? { farmerId: farmer._id } : "skip") ?? [];
   const requested = reservations.filter((r) => r.status === "requested");
+  const [prMessage, setPrMessage] = useState<string | null>(null);
+  const [savingPr, setSavingPr] = useState(false);
   const today = reservations.filter((r) => r.status === "confirmed" && r.pickupAt && new Date(r.pickupAt).toDateString() === new Date().toDateString());
 
   const header = (
@@ -45,7 +47,7 @@ export default function FarmerHomeScreen() {
   if (farmer === null) {
     return (
       <View style={{ flex: 1, backgroundColor: colors.bg }}>
-        <ScrollView contentContainerStyle={{ paddingTop: insets.top + 14, paddingHorizontal: 18, paddingBottom: 120, gap: 16 }}>
+        <ScrollView contentContainerStyle={{ paddingTop: insets.top + 14, paddingHorizontal: 18, paddingBottom: 40, gap: 16 }}>
           {header}
           <Card style={{ padding: 20, gap: 12, alignItems: "center" }}>
             <Ionicons name="leaf-outline" size={28} color={colors.green} />
@@ -56,7 +58,6 @@ export default function FarmerHomeScreen() {
             <Btn label="プロフィールを作成" variant="green" height={46} style={{ alignSelf: "stretch" }} onPress={() => router.navigate("/farmer/profile")} />
           </Card>
         </ScrollView>
-        <TabBar active="home" tabs={FARMER_TABS} />
       </View>
     );
   }
@@ -64,7 +65,7 @@ export default function FarmerHomeScreen() {
   const st = STATUS[farmer.status];
   return (
     <View style={{ flex: 1, backgroundColor: colors.bg }}>
-      <ScrollView contentContainerStyle={{ paddingTop: insets.top + 14, paddingHorizontal: 18, paddingBottom: 120, gap: 16 }}>
+      <ScrollView contentContainerStyle={{ paddingTop: insets.top + 14, paddingHorizontal: 18, paddingBottom: 40, gap: 16 }}>
         {header}
         <Card style={{ padding: 14, flexDirection: "row", alignItems: "center", gap: 12 }}>
           <FarmerAvatar uri={farmer.avatar} size={48} tint={farmer.tint} borderWidth={2} />
@@ -91,8 +92,34 @@ export default function FarmerHomeScreen() {
             label="優先表示（PR）"
             hint="地図で大きく・一覧の先頭に表示されます"
             value={farmer.pr}
-            onChange={(v) => setPr({ id: farmer._id, pr: v }).then(() => showToast(v ? "優先表示をオンにしました" : "優先表示をオフにしました"))}
+            onChange={(v) => setPr({ id: farmer._id, pr: v, prMessage: prMessage ?? farmer.prMessage }).then(() => showToast(v ? "優先表示をオンにしました" : "優先表示をオフにしました"))}
           />
+          <View style={{ gap: 8, paddingBottom: 12 }}>
+            <Field
+              label="PR 文言（生産者ページとシートに表示・地図ピンには出ません）"
+              value={prMessage ?? farmer.prMessage ?? ""}
+              onChangeText={setPrMessage}
+              multiline
+              placeholder="今週末は朝採りを多めに用意します。駐車場あり。"
+            />
+            {prMessage !== null && prMessage !== (farmer.prMessage ?? "") && (
+              <Btn
+                label={savingPr ? "保存中…" : "PR 文言を保存"}
+                height={40}
+                disabled={savingPr}
+                onPress={async () => {
+                  setSavingPr(true);
+                  try {
+                    await setPr({ id: farmer._id, pr: farmer.pr, prMessage });
+                    showToast("PR 文言を保存しました");
+                    setPrMessage(null);
+                  } finally {
+                    setSavingPr(false);
+                  }
+                }}
+              />
+            )}
+          </View>
         </Card>
 
         <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
@@ -104,7 +131,6 @@ export default function FarmerHomeScreen() {
           <ReservationCard key={r._id} reservation={r} perspective="farmer" onPress={() => router.push(`/farmer/reservation/${r._id}`)} />
         ))}
       </ScrollView>
-      <TabBar active="home" tabs={FARMER_TABS} />
     </View>
   );
 }

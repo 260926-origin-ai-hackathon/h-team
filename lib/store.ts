@@ -2,9 +2,12 @@ import { create } from "zustand";
 import type { FarmerId, ProductId } from "./types";
 
 export type Role = "consumer" | "farmer" | "admin";
-export type FilterKind = "all" | "today" | "delivery" | "top";
+export type Filters = { query: string; today: boolean; delivery: boolean; top: boolean; crop: string | null };
 export type CartItem = { productId: ProductId; quantity: number };
 export type Cart = { farmerId: FarmerId; farmerName: string; items: CartItem[] } | null;
+export type Toast = { msg: string; action?: { label: string; href: string } };
+
+export const EMPTY_FILTERS: Filters = { query: "", today: false, delivery: false, top: false, crop: null };
 
 type AppState = {
   role: Role | null;
@@ -13,10 +16,9 @@ type AppState = {
 
   selectedFarmerId: FarmerId | null;
   selectFarmer: (id: FarmerId | null) => void;
-  filter: FilterKind;
-  setFilter: (f: FilterKind) => void;
-  query: string;
-  setQuery: (q: string) => void;
+  filters: Filters;
+  setFilters: (patch: Partial<Filters>) => void;
+  resetFilters: () => void;
 
   /** Single-farmer cart: a reservation is always with one farmer. */
   cart: Cart;
@@ -24,8 +26,8 @@ type AppState = {
   setQuantity: (productId: ProductId, quantity: number) => void;
   clearCart: () => void;
 
-  toast: string | null;
-  showToast: (msg: string) => void;
+  toast: Toast | null;
+  showToast: (msg: string, action?: Toast["action"]) => void;
 };
 
 let toastTimer: ReturnType<typeof setTimeout> | null = null;
@@ -33,14 +35,13 @@ let toastTimer: ReturnType<typeof setTimeout> | null = null;
 export const useStore = create<AppState>((set, get) => ({
   role: null,
   userId: "",
-  setIdentity: (role, userId) => set({ role, userId, cart: null, selectedFarmerId: null }),
+  setIdentity: (role, userId) => set({ role, userId, cart: null, selectedFarmerId: null, filters: EMPTY_FILTERS }),
 
   selectedFarmerId: null,
   selectFarmer: (id) => set({ selectedFarmerId: id }),
-  filter: "all",
-  setFilter: (filter) => set({ filter }),
-  query: "",
-  setQuery: (query) => set({ query }),
+  filters: EMPTY_FILTERS,
+  setFilters: (patch) => set((s) => ({ filters: { ...s.filters, ...patch } })),
+  resetFilters: () => set({ filters: EMPTY_FILTERS }),
 
   cart: null,
   addToCart: (farmerId, farmerName, productId, quantity) => {
@@ -68,11 +69,12 @@ export const useStore = create<AppState>((set, get) => ({
   clearCart: () => set({ cart: null }),
 
   toast: null,
-  showToast: (msg) => {
+  showToast: (msg, action) => {
     if (toastTimer) clearTimeout(toastTimer);
-    set({ toast: msg });
-    toastTimer = setTimeout(() => set({ toast: null }), 1800);
+    set({ toast: { msg, action } });
+    toastTimer = setTimeout(() => set({ toast: null }), action ? 3000 : 1800);
   },
 }));
 
 export const cartCount = (cart: Cart) => cart?.items.reduce((a, c) => a + c.quantity, 0) ?? 0;
+export const activeFilterCount = (f: Filters) => Number(f.today) + Number(f.delivery) + Number(f.top) + Number(!!f.crop) + Number(!!f.query.trim());

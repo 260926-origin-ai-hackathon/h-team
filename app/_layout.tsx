@@ -12,7 +12,7 @@ import { CONVEX_URL, convex } from "../lib/convex";
 import { colors } from "../lib/theme";
 
 // Harmless RN Animated warning (emitted by the native stack/keyboard); keep the dev banner off the tab bar.
-LogBox.ignoreLogs(["Sending `onAnimatedValueUpdate` with no listeners registered."]);
+LogBox.ignoreLogs(["Sending `onAnimatedValueUpdate` with no listeners registered.", /\[CONVEX M\(/]);
 
 export default function RootLayout() {
   const [fontsLoaded] = useFonts({
@@ -40,16 +40,14 @@ export default function RootLayout() {
       <GestureHandlerRootView style={{ flex: 1 }}>
         <BottomSheetModalProvider>
           <StatusBar style="dark" />
-          <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: colors.bg } }}>
+          <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: colors.bg }, animation: "slide_from_right", gestureEnabled: true }}>
             <Stack.Screen name="index" />
-            <Stack.Screen name="consumer/map" options={{ animation: "fade" }} />
-            <Stack.Screen name="consumer/reservations" options={{ animation: "fade" }} />
-            <Stack.Screen name="consumer/cart" options={{ animation: "fade" }} />
-            <Stack.Screen name="farmer/home" options={{ animation: "fade" }} />
-            <Stack.Screen name="farmer/reservations" options={{ animation: "fade" }} />
-            <Stack.Screen name="farmer/products" options={{ animation: "fade" }} />
-            <Stack.Screen name="farmer/reviews" options={{ animation: "fade" }} />
-            <Stack.Screen name="farmer/profile" options={{ animation: "fade" }} />
+            <Stack.Screen name="consumer/(tabs)" options={{ animation: "fade" }} />
+            <Stack.Screen name="farmer/(tabs)" options={{ animation: "fade" }} />
+            <Stack.Screen name="admin" options={{ animation: "fade" }} />
+            <Stack.Screen name="consumer/review/[id]" options={{ presentation: "modal", animation: "slide_from_bottom" }} />
+            <Stack.Screen name="consumer/pay/[id]" options={{ presentation: "modal", animation: "slide_from_bottom" }} />
+            <Stack.Screen name="farmer/product/[id]" options={{ presentation: "modal", animation: "slide_from_bottom" }} />
           </Stack>
           <ToastHost />
         </BottomSheetModalProvider>

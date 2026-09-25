@@ -5,6 +5,19 @@ import { farmerStatus } from "./schema";
 import type { Doc } from "./_generated/dataModel";
 import type { QueryCtx } from "./_generated/server";
 
+const DAY_NAMES = ["日", "月", "火", "水", "木", "金", "土"];
+
+/** "火・木・土 9:00〜12:00 / 日 10:00〜15:00" */
+export function slotsLabel(slots: { days: number[]; start: number; end: number }[]) {
+  if (slots.length === 0) return "受取時間は要相談";
+  return slots
+    .map((s) => {
+      const days = [...s.days].sort().map((d) => DAY_NAMES[d] ?? "").join("・");
+      return `${s.days.length === 7 ? "毎日" : days} ${s.start}:00〜${s.end}:00`;
+    })
+    .join(" / ");
+}
+
 export async function toPublicFarmer(ctx: QueryCtx, f: Doc<"farmers">) {
   const { avatarStorageId, avatarUrl, farmStorageIds, farmUrls, ...rest } = f;
   const products = await ctx.db
@@ -18,6 +31,7 @@ export async function toPublicFarmer(ctx: QueryCtx, f: Doc<"farmers">) {
   const available = products.filter((p) => p.available);
   return {
     ...rest,
+    pickupHours: slotsLabel(f.pickupSlots),
     avatar: await resolveImage(ctx, avatarStorageId, avatarUrl),
     farmPhotos: await resolveImages(ctx, farmStorageIds, farmUrls),
     productCount: available.length,
@@ -47,8 +61,9 @@ const profileFields = {
   longitude: v.number(),
   crops: v.array(v.string()),
   pickupAddress: v.string(),
-  pickupHours: v.string(),
+  pickupSlots: v.array(v.object({ days: v.array(v.number()), start: v.number(), end: v.number() })),
   pickupNote: v.optional(v.string()),
+  sns: v.optional(v.object({ instagram: v.optional(v.string()), x: v.optional(v.string()), website: v.optional(v.string()) })),
 };
 
 /** Approved farmers for the consumer map. PR farmers first, then by rating. */
@@ -100,10 +115,11 @@ export const upsertMine = mutation({
   },
 });
 
+/** PR: 優先表示のオン/オフと PR 文言（文言は地図ピンには出さず、生産者ページに表示）。 */
 export const setPr = mutation({
-  args: { id: v.id("farmers"), pr: v.boolean() },
-  handler: async (ctx, { id, pr }) => {
-    await ctx.db.patch(id, { pr });
+  args: { id: v.id("farmers"), pr: v.boolean(), prMessage: v.optional(v.string()) },
+  handler: async (ctx, { id, pr, prMessage }) => {
+    await ctx.db.patch(id, { pr, prMessage: prMessage?.trim() || undefined });
   },
 });
 

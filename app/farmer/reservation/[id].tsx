@@ -8,7 +8,7 @@ import { Rating, StarRow } from "../../../components/Stars";
 import { Btn, Card, Field, IconButton, StatusPill, Txt } from "../../../components/ui";
 import { api } from "../../../convex/_generated/api";
 import type { Id } from "../../../convex/_generated/dataModel";
-import { fmtDateTime, methodLabel, statusPill } from "../../../lib/farmerView";
+import { fmtDateTime, methodLabel, paymentPill, statusPill } from "../../../lib/farmerView";
 import { useStore } from "../../../lib/store";
 import { colors, yen } from "../../../lib/theme";
 
@@ -23,16 +23,18 @@ export default function FarmerReservationDetailScreen() {
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState("");
   const [busy, setBusy] = useState(false);
+  const [tracking, setTracking] = useState("");
 
   if (r === undefined) return <View style={{ flex: 1, alignItems: "center", justifyContent: "center", backgroundColor: colors.bg }}><ActivityIndicator color={colors.ink} /></View>;
   if (!r) return <View style={{ flex: 1, alignItems: "center", justifyContent: "center", backgroundColor: colors.bg }}><Txt color={colors.muted}>予約が見つかりません</Txt></View>;
 
   const st = statusPill(r.status, r.method);
-  const act = async (status: "confirmed" | "declined" | "completed", msg: string) => {
+  const pay = paymentPill(r);
+  const act = async (status: "confirmed" | "declined" | "completed", msg: string, extra: { cashPaid?: boolean; trackingNumber?: string } = {}) => {
     if (busy) return;
     setBusy(true);
     try {
-      await setStatus({ id: r._id, status });
+      await setStatus({ id: r._id, status, ...extra });
       showToast(msg);
     } catch (e) {
       showToast(e instanceof Error ? e.message.replace(/^.*Uncaught Error: /, "") : "失敗しました");
@@ -59,7 +61,10 @@ export default function FarmerReservationDetailScreen() {
         <View style={{ flexDirection: "row", alignItems: "center", gap: 12 }}>
           <IconButton name="chevron-back" onPress={() => router.back()} />
           <Txt w={700} size={20} style={{ flex: 1 }}>予約の詳細</Txt>
-          <StatusPill {...st} />
+          <View style={{ alignItems: "flex-end", gap: 4 }}>
+            <StatusPill {...st} />
+            {pay && <StatusPill {...pay} />}
+          </View>
         </View>
 
         <Card style={{ padding: 14, flexDirection: "row", alignItems: "center", gap: 12 }}>
@@ -82,6 +87,7 @@ export default function FarmerReservationDetailScreen() {
           </View>
           {r.method === "pickup" && r.pickupAt && <Txt mono w={500} size={15}>{fmtDateTime(r.pickupAt)}</Txt>}
           {r.method === "delivery" && <Txt size={12} color={colors.inkSoft}>発送先: {r.address}</Txt>}
+          {r.trackingNumber && <Txt mono size={12} color={colors.inkSoft}>{r.carrier} 追跡番号 {r.trackingNumber}</Txt>}
           {r.note && <Txt size={11.5} color={colors.muted}>メモ: {r.note}</Txt>}
         </Card>
 
@@ -104,8 +110,28 @@ export default function FarmerReservationDetailScreen() {
             <Btn label="予約を確定する" variant="green" height={48} style={{ flex: 1.2 }} disabled={busy} onPress={() => act("confirmed", "予約を確定しました")} />
           </View>
         )}
-        {r.status === "confirmed" && (
-          <Btn label={r.method === "pickup" ? "受け渡し完了にする" : "発送済みにする"} variant="green" height={48} disabled={busy} onPress={() => act("completed", r.method === "pickup" ? "受取完了にしました" : "発送済みにしました")} />
+        {r.status === "confirmed" && r.method === "pickup" && (
+          r.paymentStatus === "paid" ? (
+            <Btn label="受け渡し完了にする" variant="green" height={48} disabled={busy} onPress={() => act("completed", "受取完了にしました")} />
+          ) : (
+            <Card style={{ padding: 14, gap: 10 }}>
+              <Txt size={12} color={colors.inkSoft} style={{ lineHeight: 18 }}>お客さまはまだお支払いをしていません。現地で受け取った場合は現地払いとして完了できます。</Txt>
+              <Btn label="現地払いで受け渡し完了" variant="green" height={48} disabled={busy} onPress={() => act("completed", "現地払いで受取完了にしました", { cashPaid: true })} />
+            </Card>
+          )
+        )}
+        {r.status === "confirmed" && r.method === "delivery" && (
+          r.paymentStatus === "paid" ? (
+            <Card style={{ padding: 14, gap: 10 }}>
+              <Txt w={700} size={13}>発送する（ヤマト運輸）</Txt>
+              <Field label="追跡番号（任意）" value={tracking} onChangeText={setTracking} placeholder="4123-4567-8901" keyboardType="numeric" />
+              <Btn label="発送済みにする" variant="green" height={48} disabled={busy} onPress={() => act("completed", "発送済みにしました", { trackingNumber: tracking })} />
+            </Card>
+          ) : (
+            <View style={{ padding: 12, borderRadius: 12, backgroundColor: colors.amberBg }}>
+              <Txt w={500} size={12} color={colors.amberText}>お客さまのお支払い待ちです。支払い後に発送できます。</Txt>
+            </View>
+          )
         )}
         {r.status === "completed" && !r.farmerReviewed && (
           <Card style={{ padding: 14, gap: 10 }}>

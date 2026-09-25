@@ -16,12 +16,16 @@ export default defineSchema({
     userId: v.string(), // demo: fixed ids
     name: v.string(),
     role: v.union(v.literal("consumer"), v.literal("farmer"), v.literal("admin")),
+    phone: v.optional(v.string()),
+    address: v.optional(v.string()), // 発送先（デフォルト）
+    bio: v.optional(v.string()),
   }).index("by_userId", ["userId"]),
 
   farmers: defineTable({
     ownerUserId: v.optional(v.string()),
     status: farmerStatus,
     pr: v.boolean(), // 優先表示（PR）
+    prMessage: v.optional(v.string()), // PR 文言（地図には出さない）
     name: v.string(),
     kana: v.string(),
     farmName: v.string(),
@@ -42,8 +46,10 @@ export default defineSchema({
     longitude: v.number(),
     crops: v.array(v.string()),
     pickupAddress: v.string(),
-    pickupHours: v.string(),
+    // 受取可能な時間帯: 曜日(0=日…6=土) と 開始/終了時刻（時）
+    pickupSlots: v.array(v.object({ days: v.array(v.number()), start: v.number(), end: v.number() })),
     pickupNote: v.optional(v.string()),
+    sns: v.optional(v.object({ instagram: v.optional(v.string()), x: v.optional(v.string()), website: v.optional(v.string()) })),
   })
     .index("by_owner", ["ownerUserId"])
     .index("by_status", ["status"]),
@@ -58,10 +64,22 @@ export default defineSchema({
     unit: v.string(),
     harvest: v.string(),
     harvestedToday: v.boolean(),
-    deliveryAvailable: v.boolean(), // 発送代行に対応
+    deliveryAvailable: v.boolean(), // 発送（宅急便）に対応
     stock: v.number(),
     available: v.boolean(),
+    expectedAt: v.optional(v.number()), // 出荷予定日（未公開のうちに掲載してウォッチを集める）
   }).index("by_farmer", ["farmerId"]),
+
+  // 出荷予定のウォッチ（販売開始したらお知らせ）
+  watches: defineTable({
+    userId: v.string(),
+    productId: v.id("products"),
+    farmerId: v.id("farmers"),
+    createdAt: v.number(),
+  })
+    .index("by_user", ["userId"])
+    .index("by_product", ["productId"])
+    .index("by_user_product", ["userId", "productId"]),
 
   reservations: defineTable({
     userId: v.string(),
@@ -83,6 +101,11 @@ export default defineSchema({
     subtotal: v.number(),
     shipping: v.number(),
     total: v.number(),
+    paymentStatus: v.union(v.literal("unpaid"), v.literal("paid")),
+    paymentMethod: v.optional(v.union(v.literal("card"), v.literal("cash"))),
+    paidAt: v.optional(v.number()),
+    carrier: v.optional(v.string()), // 発送時: "ヤマト運輸" など
+    trackingNumber: v.optional(v.string()),
     createdAt: v.number(),
     updatedAt: v.number(),
     consumerReviewed: v.boolean(),

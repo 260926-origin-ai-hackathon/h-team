@@ -1,6 +1,6 @@
 import Mapbox from "@rnmapbox/maps";
 import type { Farmer } from "./types";
-import type { FilterKind } from "./store";
+import type { Filters } from "./store";
 
 export const MAPBOX_TOKEN = process.env.EXPO_PUBLIC_MAPBOX_TOKEN ?? "";
 export const hasMapboxToken = MAPBOX_TOKEN.startsWith("pk.");
@@ -25,11 +25,12 @@ export const FOCUS_ZOOM = 10.5;
 
 export const toPosition = (f: Pick<Farmer, "latitude" | "longitude">): [number, number] => [f.longitude, f.latitude];
 
-export function matchesFilter(f: Farmer, filter: FilterKind, query: string) {
-  if (filter === "today" && !f.hasTodayHarvest) return false;
-  if (filter === "delivery" && !f.deliveryAvailable) return false;
-  if (filter === "top" && !(f.reviewCount > 0 && f.ratingAvg >= 4.5)) return false;
-  const q = query.trim();
+export function matchesFilter(f: Farmer, filters: Filters) {
+  if (filters.today && !f.hasTodayHarvest) return false;
+  if (filters.delivery && !f.deliveryAvailable) return false;
+  if (filters.top && !(f.reviewCount > 0 && f.ratingAvg >= 4.5)) return false;
+  if (filters.crop && !f.crops.includes(filters.crop)) return false;
+  const q = filters.query.trim();
   if (q) {
     const hay = `${f.name} ${f.kana} ${f.farmName} ${f.prefecture} ${f.city} ${f.crops.join(" ")}`;
     if (!hay.includes(q)) return false;

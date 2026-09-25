@@ -7,7 +7,11 @@ import type { QueryCtx } from "./_generated/server";
 
 async function toPublicProduct(ctx: QueryCtx, p: Doc<"products">) {
   const { imageStorageId, imageUrl, ...rest } = p;
-  return { ...rest, image: await resolveImage(ctx, imageStorageId, imageUrl) };
+  const watchers = await ctx.db
+    .query("watches")
+    .withIndex("by_product", (q) => q.eq("productId", p._id))
+    .collect();
+  return { ...rest, image: await resolveImage(ctx, imageStorageId, imageUrl), watcherCount: watchers.length };
 }
 
 /** Consumer-facing: available products of a farmer. */
@@ -19,6 +23,29 @@ export const byFarmer = query({
       .withIndex("by_farmer", (q) => q.eq("farmerId", farmerId))
       .collect();
     return Promise.all(products.filter((p) => p.available).map((p) => toPublicProduct(ctx, p)));
+  },
+});
+
+/** Consumer-facing: 出荷予定（未公開・予定日あり）。`userId` があればウォッチ済みかも返す。 */
+export const upcomingByFarmer = query({
+  args: { farmerId: v.id("farmers"), userId: v.optional(v.string()) },
+  handler: async (ctx, { farmerId, userId }) => {
+    const products = await ctx.db
+      .query("products")
+      .withIndex("by_farmer", (q) => q.eq("farmerId", farmerId))
+      .collect();
+    const upcoming = products.filter((p) => !p.available && p.expectedAt);
+    const out = [];
+    for (const p of upcoming) {
+      const watched = userId
+        ? !!(await ctx.db
+            .query("watches")
+            .withIndex("by_user_product", (q) => q.eq("userId", userId).eq("productId", p._id))
+            .unique())
+        : false;
+      out.push({ ...(await toPublicProduct(ctx, p)), watched });
+    }
+    return out.sort((a, b) => (a.expectedAt ?? 0) - (b.expectedAt ?? 0));
   },
 });
 
@@ -69,6 +96,7 @@ const productFields = {
   deliveryAvailable: v.boolean(),
   stock: v.number(),
   available: v.boolean(),
+  expectedAt: v.optional(v.number()),
 };
 
 export const upsert = mutation({

@@ -1,13 +1,12 @@
 import { useQuery } from "convex/react";
 import { ScrollView, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { ReviewCard } from "../../components/ReviewCard";
-import { StarRow } from "../../components/Stars";
-import { FARMER_TABS, TabBar } from "../../components/TabBar";
-import { Card, ScreenTitle, Txt } from "../../components/ui";
-import { api } from "../../convex/_generated/api";
-import { colors } from "../../lib/theme";
-import { useMyFarmer } from "../../lib/useMyFarmer";
+import { ReviewCard } from "../../../components/ReviewCard";
+import { StarRow } from "../../../components/Stars";
+import { Card, ScreenTitle, Txt } from "../../../components/ui";
+import { api } from "../../../convex/_generated/api";
+import { colors } from "../../../lib/theme";
+import { useMyFarmer } from "../../../lib/useMyFarmer";
 
 export default function FarmerReviewsScreen() {
   const insets = useSafeAreaInsets();
@@ -16,7 +15,7 @@ export default function FarmerReviewsScreen() {
   const dist = [5, 4, 3, 2, 1].map((n) => ({ n, c: reviews.filter((r) => r.rating === n).length }));
   return (
     <View style={{ flex: 1, backgroundColor: colors.bg }}>
-      <ScrollView contentContainerStyle={{ paddingTop: insets.top + 14, paddingHorizontal: 18, paddingBottom: 120, gap: 14 }}>
+      <ScrollView contentContainerStyle={{ paddingTop: insets.top + 14, paddingHorizontal: 18, paddingBottom: 40, gap: 14 }}>
         <ScreenTitle label="REVIEWS" title="レビュー" />
         {farmer && (
           <Card style={{ padding: 16, gap: 12 }}>
@@ -45,7 +44,6 @@ export default function FarmerReviewsScreen() {
           {reviews.map((r) => <ReviewCard key={r._id} review={r} />)}
         </Card>
       </ScrollView>
-      <TabBar active="reviews" tabs={FARMER_TABS} />
     </View>
   );
 }

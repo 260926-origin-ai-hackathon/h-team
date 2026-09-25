@@ -1,5 +1,9 @@
 import { colors } from "./theme";
-import type { Farmer, Product, ReservationStatus, Fulfillment } from "./types";
+import type { Farmer, Fulfillment, PickupSlot, Product, Reservation, ReservationStatus } from "./types";
+
+export const CARRIER = "ヤマト運輸";
+export const SHIPPING_FEE = 880;
+export const DAY_NAMES = ["日", "月", "火", "水", "木", "金", "土"];
 
 export function seasonPill(f: Pick<Farmer, "season" | "seasonState">) {
   if (f.seasonState === "now") return { label: "今が旬", bg: colors.greenBg, color: colors.greenText };
@@ -39,12 +43,19 @@ export function statusPill(status: ReservationStatus, method: Fulfillment) {
   }
 }
 
-export const methodLabel = (m: Fulfillment) => (m === "pickup" ? "取りに行く" : "発送代行");
+export function paymentPill(r: Pick<Reservation, "paymentStatus" | "paymentMethod" | "status">) {
+  if (r.paymentStatus === "paid") {
+    return { label: r.paymentMethod === "cash" ? "現地払い済み" : "支払い済み", bg: colors.greenBg, color: colors.greenText };
+  }
+  if (r.status === "declined" || r.status === "cancelled") return null;
+  return { label: "未払い", bg: colors.fewBg, color: colors.fewText };
+}
+
+export const methodLabel = (m: Fulfillment) => (m === "pickup" ? "取りに行く" : `発送（${CARRIER}）`);
 
 export function fmtDateTime(ts: number) {
   const d = new Date(ts);
-  const w = ["日", "月", "火", "水", "木", "金", "土"][d.getDay()];
-  return `${d.getMonth() + 1}/${d.getDate()}（${w}） ${d.getHours()}:${String(d.getMinutes()).padStart(2, "0")}`;
+  return `${d.getMonth() + 1}/${d.getDate()}（${DAY_NAMES[d.getDay()]}） ${d.getHours()}:${String(d.getMinutes()).padStart(2, "0")}`;
 }
 
 export function fmtDate(ts: number) {
@@ -52,16 +63,27 @@ export function fmtDate(ts: number) {
   return `${d.getFullYear()}/${d.getMonth() + 1}/${d.getDate()}`;
 }
 
-export const PICKUP_HOURS = [9, 10, 11, 14, 15, 16];
+export function fmtExpected(ts: number) {
+  const d = new Date(ts);
+  return `${d.getMonth() + 1}/${d.getDate()}（${DAY_NAMES[d.getDay()]}）出荷予定`;
+}
 
-export function pickupDays(n = 7) {
-  const out: { label: string; date: Date }[] = [];
-  const names = ["日", "月", "火", "水", "木", "金", "土"];
+/** Days (from tomorrow, up to `n` days ahead) on which the farmer accepts pickups, with the selectable hours. */
+export function pickupDaysFor(slots: PickupSlot[], n = 14) {
+  const out: { label: string; date: Date; hours: number[] }[] = [];
   for (let i = 1; i <= n; i++) {
     const d = new Date();
     d.setDate(d.getDate() + i);
     d.setHours(0, 0, 0, 0);
-    out.push({ label: i === 1 ? "明日" : `${d.getMonth() + 1}/${d.getDate()} ${names[d.getDay()]}`, date: d });
+    const hours = new Set<number>();
+    for (const s of slots) {
+      if (!s.days.includes(d.getDay())) continue;
+      for (let h = s.start; h < s.end; h++) hours.add(h);
+    }
+    if (hours.size === 0) continue;
+    out.push({ label: i === 1 ? "明日" : `${d.getMonth() + 1}/${d.getDate()} ${DAY_NAMES[d.getDay()]}`, date: d, hours: [...hours].sort((a, b) => a - b) });
   }
   return out;
 }
+
+export const HOUR_OPTIONS = Array.from({ length: 15 }, (_, i) => i + 6); // 6..20

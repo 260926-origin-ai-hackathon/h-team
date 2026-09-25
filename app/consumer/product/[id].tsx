@@ -11,8 +11,8 @@ import { Rating } from "../../../components/Stars";
 import { Btn, IconButton, Stepper, Txt } from "../../../components/ui";
 import { api } from "../../../convex/_generated/api";
 import type { Id } from "../../../convex/_generated/dataModel";
-import { productBadges } from "../../../lib/farmerView";
-import { useStore } from "../../../lib/store";
+import { productBadges , CARRIER } from "../../../lib/farmerView";
+import { cartCount, useStore } from "../../../lib/store";
 import { colors, yen } from "../../../lib/theme";
 
 export default function ProductDetailScreen() {
@@ -20,6 +20,7 @@ export default function ProductDetailScreen() {
   const insets = useSafeAreaInsets();
   const product = useQuery(api.products.get, { id: id as Id<"products"> });
   const { addToCart, showToast } = useStore();
+  const cartN = useStore((s) => cartCount(s.cart));
   const [qty, setQty] = useState(1);
 
   if (product === undefined) {
@@ -33,7 +34,7 @@ export default function ProductDetailScreen() {
   const soldOut = product.stock <= 0;
   const add = (thenGo: boolean) => {
     const r = addToCart(farmer._id, farmer.name, product._id, qty);
-    showToast(r === "replaced" ? "別の生産者の商品を入れ替えました" : `${product.name} を予約カゴに追加しました`);
+    showToast(r === "replaced" ? "別の生産者の商品を入れ替えました" : `${product.name} をカゴに追加しました`, thenGo ? undefined : { label: "カゴを見る", href: "/consumer/cart" });
     if (thenGo) router.navigate("/consumer/cart");
   };
 
@@ -45,6 +46,14 @@ export default function ProductDetailScreen() {
           <View style={{ position: "absolute", top: insets.top + 8, left: 16 }}>
             <IconButton name="chevron-back" onPress={() => router.back()} />
           </View>
+          {cartN > 0 && (
+            <Pressable onPress={() => router.navigate("/consumer/cart")} accessibilityLabel={`カゴ ${cartN}`} style={{ position: "absolute", top: insets.top + 8, right: 16, height: 38, paddingHorizontal: 14, borderRadius: 19, backgroundColor: colors.white, flexDirection: "row", alignItems: "center", gap: 6, shadowColor: "#000", shadowOpacity: 0.1, shadowRadius: 6, shadowOffset: { width: 0, height: 2 }, elevation: 3 }}>
+              <Ionicons name="bag-outline" size={14} color={colors.ink} />
+              <View style={{ backgroundColor: colors.ink, borderRadius: 9, paddingHorizontal: 6, paddingVertical: 1 }}>
+                <Txt mono w={500} size={11} color={colors.white}>{String(cartN)}</Txt>
+              </View>
+            </Pressable>
+          )}
         </View>
         <View style={{ paddingHorizontal: 18, paddingVertical: 20, gap: 14 }}>
           <Pressable onPress={() => router.push(`/consumer/farmer/${farmer._id}`)} accessibilityLabel={`生産者 ${farmer.name}`} style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
@@ -72,8 +81,8 @@ export default function ProductDetailScreen() {
             <Txt size={11.5} color={colors.muted} style={{ lineHeight: 17 }}>{farmer.pickupAddress}</Txt>
             <View style={{ flexDirection: "row", alignItems: "center", gap: 6 }}>
               <Ionicons name="cube-outline" size={14} color={product.deliveryAvailable ? colors.green : colors.mutedLight} />
-              <Txt w={700} size={12} color={product.deliveryAvailable ? colors.ink : colors.muted}>発送代行</Txt>
-              <Txt size={11} color={colors.inkSoft}>{product.deliveryAvailable ? "対応（送料 ¥880）" : "この商品は受取のみ"}</Txt>
+              <Txt w={700} size={12} color={product.deliveryAvailable ? colors.ink : colors.muted}>発送</Txt>
+              <Txt size={11} color={colors.inkSoft}>{product.deliveryAvailable ? `${CARRIER} 宅急便（送料 ¥880）` : "この商品は受取のみ"}</Txt>
             </View>
           </View>
         </View>
@@ -82,7 +91,7 @@ export default function ProductDetailScreen() {
       <View style={{ paddingHorizontal: 18, paddingTop: 12, paddingBottom: insets.bottom + 12, borderTopWidth: 1, borderTopColor: "#F0F0EC", backgroundColor: colors.white, gap: 10 }}>
         <View style={{ flexDirection: "row", gap: 10, alignItems: "center" }}>
           <Stepper value={qty} onChange={(n) => setQty(Math.max(1, Math.min(n, Math.max(product.stock, 1))))} size="md" />
-          <Btn label="予約カゴに入れる" variant="green" height={50} style={{ flex: 1 }} disabled={soldOut} onPress={() => add(false)} />
+          <Btn label="カゴに入れる" variant="green" height={50} style={{ flex: 1 }} disabled={soldOut} onPress={() => add(false)} />
         </View>
         <Btn label="この商品を予約する" variant="outline" height={44} disabled={soldOut} onPress={() => add(true)} />
       </View>
