@@ -12,7 +12,6 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   ios: {
     supportsTablet: false,
     bundleIdentifier: "jp.hatakemap.app",
-    buildNumber: "1",
     infoPlist: {
       NSLocationWhenInUseUsageDescription:
         "近くの生産者を地図で見つけるため、また農園設定で畑の位置を登録するために位置情報を使用します。",
@@ -23,7 +22,6 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   },
   android: {
     package: "jp.hatakemap.app",
-    versionCode: 1,
     adaptiveIcon: {
       backgroundColor: "#FAFAF8",
       foregroundImage: "./assets/android-icon-foreground.png",

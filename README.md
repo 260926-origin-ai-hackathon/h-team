@@ -191,4 +191,4 @@ docs/e2e/                   参照スクリーンショット
    内部テスター（最大 100 名）は審査なしで即配布できます。外部テスターは Beta App Review が必要です。
 5. App Store Connect の「App のプライバシー」で位置情報（アプリ機能のため・ユーザーと紐づけない）を申告。
 
-メモ: `ITSAppUsesNonExemptEncryption: false` 設定済み（輸出コンプライアンスの質問をスキップ）。`eas.json` の production は `autoIncrement` でビルド番号を自動加算。運営（承認）画面は起動画面のタイトルを 1.5 秒長押しで表示します。
+メモ: `ITSAppUsesNonExemptEncryption: false` 設定済み（輸出コンプライアンスの質問をスキップ）。`eas.json` の production は `autoIncrement` でビルド番号を EAS 側（remote）で自動加算するため、`app.config.ts` に buildNumber は持たない。運営（承認）画面は起動画面のタイトルを 1.5 秒長押しで表示します。
