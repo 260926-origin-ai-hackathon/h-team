@@ -8,9 +8,9 @@
 
 <p>
   <img src="docs/e2e/c01-map.png" width="180" alt="地図">
-  <img src="docs/e2e/c02-sheet.png" width="180" alt="生産者シート">
-  <img src="docs/e2e/c03-farmer-top.png" width="180" alt="生産者ページ">
-  <img src="docs/e2e/c07-cart.png" width="180" alt="予約カゴ">
+  <img src="docs/e2e/c04-sheet.png" width="180" alt="生産者シート">
+  <img src="docs/e2e/c05-farmer-top.png" width="180" alt="生産者ページ">
+  <img src="docs/e2e/c10-cart.png" width="180" alt="予約カゴ">
 </p>
 
 消費者アプリ・生産者アプリ・運営の承認フローまで、**1 日で全部動くところまで作った。** iOS シミュレータで消費者 → 生産者 → 運営の一連の流れを Maestro で E2E テスト済み。TestFlight で配れる状態まで持っていってある。
@@ -52,22 +52,26 @@
 
 | 消費者 | | | |
 | --- | --- | --- | --- |
-| <img src="docs/e2e/c00-role.png" width="160"> | <img src="docs/e2e/c04-farmer-pickup.png" width="160"> | <img src="docs/e2e/c06-product.png" width="160"> | <img src="docs/e2e/c08-cart-filled.png" width="160"> |
-| ロール選択 | 農園と受取場所 | 商品 | 受取日時を選ぶ |
-| <img src="docs/e2e/c09-reservation-requested.png" width="160"> | <img src="docs/e2e/c10-reservations.png" width="160"> | <img src="docs/e2e/c11-review-form.png" width="160"> | <img src="docs/e2e/c05-farmer-reviews.png" width="160"> |
-| 予約リクエスト | 予約一覧 | レビュー投稿 | 生産者のレビュー |
+| <img src="docs/e2e/c00-role.png" width="160"> | <img src="docs/e2e/c02-search.png" width="160"> | <img src="docs/e2e/c03-map-filtered.png" width="160"> | <img src="docs/e2e/c06-upcoming.png" width="160"> |
+| ロール選択 | 検索・絞り込み | 絞り込み後の地図 | 出荷予定をウォッチ |
+| <img src="docs/e2e/c07-product.png" width="160"> | <img src="docs/e2e/c09-floating-cart.png" width="160"> | <img src="docs/e2e/c11-cart-filled.png" width="160"> | <img src="docs/e2e/c12-reservation-requested.png" width="160"> |
+| 商品 | フローティングカゴ | 受取日時を選ぶ | 予約リクエスト |
+| <img src="docs/e2e/c13-pay.png" width="160"> | <img src="docs/e2e/c15-reservations.png" width="160"> | <img src="docs/e2e/c16-review-form.png" width="160"> | <img src="docs/e2e/c17-mypage.png" width="160"> |
+| カード決済（テスト） | 予約一覧 | レビュー投稿 | マイページ・生産者からの評価 |
 
 | 生産者 | | | |
 | --- | --- | --- | --- |
 | <img src="docs/e2e/f01-home.png" width="160"> | <img src="docs/e2e/f03-reservations.png" width="160"> | <img src="docs/e2e/f04-request-detail.png" width="160"> | <img src="docs/e2e/f06-completed-rated.png" width="160"> |
 | ホーム | 予約管理 | リクエスト詳細 | 受取完了・お客さま評価 |
-| <img src="docs/e2e/f07-products.png" width="160"> | <img src="docs/e2e/f08-product-form.png" width="160"> | <img src="docs/e2e/f11-profile.png" width="160"> | <img src="docs/e2e/f10-reviews.png" width="160"> |
-| 商品 | 商品の追加 | プロフィール | レビュー |
+| <img src="docs/e2e/f07-ship.png" width="160"> | <img src="docs/e2e/f08-shipped.png" width="160"> | <img src="docs/e2e/f09-products.png" width="160"> | <img src="docs/e2e/f10-product-upcoming.png" width="160"> |
+| 追跡番号を入れて発送 | 発送済み | 商品 | 商品の追加（出荷予定） |
+| <img src="docs/e2e/f02-pr.png" width="160"> | <img src="docs/e2e/f12-reviews.png" width="160"> | <img src="docs/e2e/f13-profile-slots.png" width="160"> | <img src="docs/e2e/f14-profile-sns.png" width="160"> |
+| PR のオン／オフと文言 | レビュー | 受取時間帯の設定 | SNS の設定 |
 
-| 承認フロー | | |
-| --- | --- | --- |
-| <img src="docs/e2e/a02-pending.png" width="160"> | <img src="docs/e2e/a03-admin.png" width="160"> | <img src="docs/e2e/a04-approved.png" width="160"> |
-| 新規登録 → 承認待ち | 運営が承認 | 公開中 |
+| 承認フロー | | | |
+| --- | --- | --- | --- |
+| <img src="docs/e2e/a01-farmer-empty.png" width="160"> | <img src="docs/e2e/a02-pending.png" width="160"> | <img src="docs/e2e/a03-admin.png" width="160"> | <img src="docs/e2e/a04-approved.png" width="160"> |
+| 新規生産者の初回起動 | 登録 → 承認待ち | 運営が承認 | 公開中 |
 
 スクリーンショットは Maestro の E2E 実行中に iOS シミュレータから撮ったもの（`docs/e2e/`）。手動で並べた画像ではなく、実際に動いているフローの記録。
 

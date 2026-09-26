@@ -1,0 +1,150 @@
+# デモ動画用のコア機能フロー（Expo Go）。
+# 消費者: 地図 → ピン → 生産者ページ（顔から）→ 商品 → カゴ → 受取時間帯から日時 → 予約リクエスト → テスト決済
+# 生産者: 予約管理 → いま来たリクエストを確定 → 現地払いで受け渡し完了 → お客さまを評価
+# 録画: xcrun simctl io booted recordVideo docs/demo.mp4 を回しながら maestro test e2e/go/demo.yaml
+appId: host.exp.Exponent
+---
+- stopApp
+- openLink: "exp://127.0.0.1:8081"
+- extendedWaitUntil:
+    visible: ".*として使う"
+    timeout: 90000
+# Expo Go 初回起動時の開発メニュー案内を閉じる
+- runFlow:
+    when:
+      visible: "Continue"
+    commands:
+      - tapOn: "Continue"
+      - waitForAnimationToEnd
+- waitForAnimationToEnd
+- tapOn: "消費者として使う"
+- extendedWaitUntil:
+    visible: ".*はたけマップ.*"
+    timeout: 30000
+- waitForAnimationToEnd
+
+# 地図 → 検索で絞り込み → ピン → シート → 生産者ページ
+- tapOn: "検索"
+- extendedWaitUntil:
+    visible: ".*生産者を探す.*"
+    timeout: 10000
+- waitForAnimationToEnd
+- tapOn: "おくら"
+- waitForAnimationToEnd
+- extendedWaitUntil:
+    visible: ".*件の生産者を表示.*"
+    timeout: 10000
+- tapOn: ".*件の生産者を表示.*"
+- waitForAnimationToEnd
+- tapOn: "廣瀬 裕 白菜"
+- extendedWaitUntil:
+    visible: ".*生産者を見る.*"
+    timeout: 10000
+- waitForAnimationToEnd
+- tapOn: ".*生産者を見る.*"
+- extendedWaitUntil:
+    visible: ".*01 · 人.*"
+    timeout: 10000
+- waitForAnimationToEnd
+- swipe:
+    direction: UP
+    duration: 1200
+- waitForAnimationToEnd
+- swipe:
+    direction: UP
+    duration: 1200
+- waitForAnimationToEnd
+
+# 商品 → カゴ
+- scrollUntilVisible:
+    element: ".*丸おくら.*"
+    direction: DOWN
+- tapOn:
+    text: ".*丸おくら.*"
+    index: 0
+- extendedWaitUntil:
+    visible: ".*カゴに入れる.*"
+    timeout: 10000
+- waitForAnimationToEnd
+- tapOn: "カゴに入れる"
+- extendedWaitUntil:
+    visible: "カゴを見る"
+    timeout: 5000
+- waitForAnimationToEnd
+- tapOn: "カゴを見る"
+
+# カゴ → 受取日時（生産者の時間帯）→ リクエスト → 決済
+- extendedWaitUntil:
+    visible: ".*受取方法.*"
+    timeout: 10000
+- waitForAnimationToEnd
+- tapOn:
+    text: "^(明日|[0-9]+/[0-9]+ (水|土|日))$"
+    index: 0
+- scrollUntilVisible:
+    element: "9:00"
+    direction: DOWN
+- tapOn: "9:00"
+- scrollUntilVisible:
+    element: ".*予約をリクエスト.*"
+    direction: DOWN
+- waitForAnimationToEnd
+- tapOn: ".*予約をリクエスト.*"
+- extendedWaitUntil:
+    visible: ".*予約の詳細.*"
+    timeout: 15000
+- waitForAnimationToEnd
+- scrollUntilVisible:
+    element: ".*を支払う.*"
+    direction: DOWN
+- tapOn: ".*を支払う.*"
+- extendedWaitUntil:
+    visible: ".*テスト決済.*"
+    timeout: 10000
+- waitForAnimationToEnd
+- tapOn: ".*を支払う.*"
+- extendedWaitUntil:
+    visible: ".*支払い済み.*"
+    timeout: 10000
+- waitForAnimationToEnd
+
+# 生産者に切り替え（Expo Go のフローティングボタンが切り替えリンクに重なるため再起動）
+- stopApp
+- openLink: "exp://127.0.0.1:8081"
+- extendedWaitUntil:
+    visible: "生産者として使う"
+    timeout: 90000
+- waitForAnimationToEnd
+- tapOn: "生産者として使う"
+- extendedWaitUntil:
+    visible: ".*未対応リクエスト.*"
+    timeout: 30000
+- waitForAnimationToEnd
+- tapOn: "予約"
+- extendedWaitUntil:
+    visible: ".*予約管理.*"
+    timeout: 10000
+- waitForAnimationToEnd
+- tapOn:
+    text: "予約 田中 花 リクエスト中"
+    index: 0
+- extendedWaitUntil:
+    visible: ".*予約を確定する.*"
+    timeout: 10000
+- waitForAnimationToEnd
+- tapOn: ".*予約を確定する.*"
+- extendedWaitUntil:
+    visible: ".*受け渡し完了.*"
+    timeout: 10000
+- waitForAnimationToEnd
+- tapOn: ".*受け渡し完了.*"
+- extendedWaitUntil:
+    visible: ".*お客さまを評価する.*"
+    timeout: 10000
+- waitForAnimationToEnd
+- tapOn: "5つ星"
+- tapOn: ".*評価を送る.*"
+- extendedWaitUntil:
+    visible: ".*お客さまを評価済み.*"
+    timeout: 10000
+- waitForAnimationToEnd
